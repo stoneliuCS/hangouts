@@ -1,0 +1,15 @@
+import { Info, OpenApiV3 } from "fluid-oas";
+import { addOpenApiRoutes } from "./paths";
+const CWD = import.meta.dir;
+
+const OAS_PATH = CWD + "/../openapi.json"
+
+async function main() {
+  const info = Info.addTitle("Hangouts.ai").addVersion("0.0.1");
+  let oas = OpenApiV3.addOpenApiVersion("3.1.1").addInfo(info);
+  oas = addOpenApiRoutes(oas);
+  oas.writeOASSync(OAS_PATH);
+}
+
+main();
+
