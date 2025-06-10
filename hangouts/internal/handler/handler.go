@@ -23,7 +23,7 @@ func NewHandler(controller controller.Controller, logger *slog.Logger) api.Handl
 
 // Define a method on the Healthcheckservice method that pings the server.
 func (h Handler) APIV1HealthcheckGet(ctx context.Context) (*api.APIV1HealthcheckGetOK, error) {
-	return &api.APIV1HealthcheckGetOK{Message: api.OptAPIV1HealthcheckGetOKMessage{}}, nil
+	return &api.APIV1HealthcheckGetOK{Message: api.OptAPIV1HealthcheckGetOKMessage{"OK", true}}, nil
 }
 
 func (h Handler) NewError(ctx context.Context, err error) *api.ErrRespStatusCode {
