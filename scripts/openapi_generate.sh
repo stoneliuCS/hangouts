@@ -10,3 +10,5 @@ bun run index.ts
 GO_GENERATOR=$SCRIPT_DIR/../hangouts
 cd $GO_GENERATOR
 go generate
+go get hangouts/gen
+go mod tidy
