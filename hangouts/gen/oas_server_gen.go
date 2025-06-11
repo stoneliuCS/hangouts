@@ -8,16 +8,16 @@ import (
 
 // Handler handles operations described by OpenAPI v3 specification.
 type Handler interface {
-	// APIV1HealthcheckGet implements GET /api/v1/healthcheck operation.
-	//
-	// GET /api/v1/healthcheck
-	APIV1HealthcheckGet(ctx context.Context) (*APIV1HealthcheckGetOK, error)
 	// Get implements GET / operation.
 	//
 	// API documentation.
 	//
 	// GET /
 	Get(ctx context.Context) (GetOK, error)
+	// HealthcheckGet implements GET /healthcheck operation.
+	//
+	// GET /healthcheck
+	HealthcheckGet(ctx context.Context) (*HealthcheckGetOK, error)
 	// NewError creates *ErrorSchemaStatusCode from error returned by handler.
 	//
 	// Used for common default response.

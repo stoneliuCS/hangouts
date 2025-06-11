@@ -8,7 +8,7 @@ import (
 	"github.com/ogen-go/ogen/validate"
 )
 
-func (s *APIV1HealthcheckGetOK) Validate() error {
+func (s *HealthcheckGetOK) Validate() error {
 	if s == nil {
 		return validate.ErrNilPointer
 	}
@@ -38,7 +38,7 @@ func (s *APIV1HealthcheckGetOK) Validate() error {
 	return nil
 }
 
-func (s APIV1HealthcheckGetOKMessage) Validate() error {
+func (s HealthcheckGetOKMessage) Validate() error {
 	switch s {
 	case "OK":
 		return nil

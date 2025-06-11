@@ -13,54 +13,6 @@ func (s *ErrorSchemaStatusCode) Error() string {
 	return fmt.Sprintf("code %d: %+v", s.StatusCode, s.Response)
 }
 
-type APIV1HealthcheckGetOK struct {
-	Message OptAPIV1HealthcheckGetOKMessage `json:"message"`
-}
-
-// GetMessage returns the value of Message.
-func (s *APIV1HealthcheckGetOK) GetMessage() OptAPIV1HealthcheckGetOKMessage {
-	return s.Message
-}
-
-// SetMessage sets the value of Message.
-func (s *APIV1HealthcheckGetOK) SetMessage(val OptAPIV1HealthcheckGetOKMessage) {
-	s.Message = val
-}
-
-type APIV1HealthcheckGetOKMessage string
-
-const (
-	APIV1HealthcheckGetOKMessageOK APIV1HealthcheckGetOKMessage = "OK"
-)
-
-// AllValues returns all APIV1HealthcheckGetOKMessage values.
-func (APIV1HealthcheckGetOKMessage) AllValues() []APIV1HealthcheckGetOKMessage {
-	return []APIV1HealthcheckGetOKMessage{
-		APIV1HealthcheckGetOKMessageOK,
-	}
-}
-
-// MarshalText implements encoding.TextMarshaler.
-func (s APIV1HealthcheckGetOKMessage) MarshalText() ([]byte, error) {
-	switch s {
-	case APIV1HealthcheckGetOKMessageOK:
-		return []byte(s), nil
-	default:
-		return nil, errors.Errorf("invalid value: %q", s)
-	}
-}
-
-// UnmarshalText implements encoding.TextUnmarshaler.
-func (s *APIV1HealthcheckGetOKMessage) UnmarshalText(data []byte) error {
-	switch APIV1HealthcheckGetOKMessage(data) {
-	case APIV1HealthcheckGetOKMessageOK:
-		*s = APIV1HealthcheckGetOKMessageOK
-		return nil
-	default:
-		return errors.Errorf("invalid value: %q", data)
-	}
-}
-
 // Error Schema.
 // Ref: #/components/schemas/ErrorSchema
 type ErrorSchema struct {
@@ -117,38 +69,86 @@ func (s GetOK) Read(p []byte) (n int, err error) {
 	return s.Data.Read(p)
 }
 
-// NewOptAPIV1HealthcheckGetOKMessage returns new OptAPIV1HealthcheckGetOKMessage with value set to v.
-func NewOptAPIV1HealthcheckGetOKMessage(v APIV1HealthcheckGetOKMessage) OptAPIV1HealthcheckGetOKMessage {
-	return OptAPIV1HealthcheckGetOKMessage{
+type HealthcheckGetOK struct {
+	Message OptHealthcheckGetOKMessage `json:"message"`
+}
+
+// GetMessage returns the value of Message.
+func (s *HealthcheckGetOK) GetMessage() OptHealthcheckGetOKMessage {
+	return s.Message
+}
+
+// SetMessage sets the value of Message.
+func (s *HealthcheckGetOK) SetMessage(val OptHealthcheckGetOKMessage) {
+	s.Message = val
+}
+
+type HealthcheckGetOKMessage string
+
+const (
+	HealthcheckGetOKMessageOK HealthcheckGetOKMessage = "OK"
+)
+
+// AllValues returns all HealthcheckGetOKMessage values.
+func (HealthcheckGetOKMessage) AllValues() []HealthcheckGetOKMessage {
+	return []HealthcheckGetOKMessage{
+		HealthcheckGetOKMessageOK,
+	}
+}
+
+// MarshalText implements encoding.TextMarshaler.
+func (s HealthcheckGetOKMessage) MarshalText() ([]byte, error) {
+	switch s {
+	case HealthcheckGetOKMessageOK:
+		return []byte(s), nil
+	default:
+		return nil, errors.Errorf("invalid value: %q", s)
+	}
+}
+
+// UnmarshalText implements encoding.TextUnmarshaler.
+func (s *HealthcheckGetOKMessage) UnmarshalText(data []byte) error {
+	switch HealthcheckGetOKMessage(data) {
+	case HealthcheckGetOKMessageOK:
+		*s = HealthcheckGetOKMessageOK
+		return nil
+	default:
+		return errors.Errorf("invalid value: %q", data)
+	}
+}
+
+// NewOptHealthcheckGetOKMessage returns new OptHealthcheckGetOKMessage with value set to v.
+func NewOptHealthcheckGetOKMessage(v HealthcheckGetOKMessage) OptHealthcheckGetOKMessage {
+	return OptHealthcheckGetOKMessage{
 		Value: v,
 		Set:   true,
 	}
 }
 
-// OptAPIV1HealthcheckGetOKMessage is optional APIV1HealthcheckGetOKMessage.
-type OptAPIV1HealthcheckGetOKMessage struct {
-	Value APIV1HealthcheckGetOKMessage
+// OptHealthcheckGetOKMessage is optional HealthcheckGetOKMessage.
+type OptHealthcheckGetOKMessage struct {
+	Value HealthcheckGetOKMessage
 	Set   bool
 }
 
-// IsSet returns true if OptAPIV1HealthcheckGetOKMessage was set.
-func (o OptAPIV1HealthcheckGetOKMessage) IsSet() bool { return o.Set }
+// IsSet returns true if OptHealthcheckGetOKMessage was set.
+func (o OptHealthcheckGetOKMessage) IsSet() bool { return o.Set }
 
 // Reset unsets value.
-func (o *OptAPIV1HealthcheckGetOKMessage) Reset() {
-	var v APIV1HealthcheckGetOKMessage
+func (o *OptHealthcheckGetOKMessage) Reset() {
+	var v HealthcheckGetOKMessage
 	o.Value = v
 	o.Set = false
 }
 
 // SetTo sets value to v.
-func (o *OptAPIV1HealthcheckGetOKMessage) SetTo(v APIV1HealthcheckGetOKMessage) {
+func (o *OptHealthcheckGetOKMessage) SetTo(v HealthcheckGetOKMessage) {
 	o.Set = true
 	o.Value = v
 }
 
 // Get returns value and boolean that denotes whether value was set.
-func (o OptAPIV1HealthcheckGetOKMessage) Get() (v APIV1HealthcheckGetOKMessage, ok bool) {
+func (o OptHealthcheckGetOKMessage) Get() (v HealthcheckGetOKMessage, ok bool) {
 	if !o.Set {
 		return v, false
 	}
@@ -156,7 +156,7 @@ func (o OptAPIV1HealthcheckGetOKMessage) Get() (v APIV1HealthcheckGetOKMessage, 
 }
 
 // Or returns value if set, or given parameter if does not.
-func (o OptAPIV1HealthcheckGetOKMessage) Or(d APIV1HealthcheckGetOKMessage) APIV1HealthcheckGetOKMessage {
+func (o OptHealthcheckGetOKMessage) Or(d HealthcheckGetOKMessage) HealthcheckGetOKMessage {
 	if v, ok := o.Get(); ok {
 		return v
 	}

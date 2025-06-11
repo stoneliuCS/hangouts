@@ -67,9 +67,9 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			switch elem[0] {
-			case 'a': // Prefix: "api/v1/healthcheck"
+			case 'h': // Prefix: "healthcheck"
 
-				if l := len("api/v1/healthcheck"); len(elem) >= l && elem[0:l] == "api/v1/healthcheck" {
+				if l := len("healthcheck"); len(elem) >= l && elem[0:l] == "healthcheck" {
 					elem = elem[l:]
 				} else {
 					break
@@ -79,7 +79,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					// Leaf node.
 					switch r.Method {
 					case "GET":
-						s.handleAPIV1HealthcheckGetRequest([0]string{}, elemIsEscaped, w, r)
+						s.handleHealthcheckGetRequest([0]string{}, elemIsEscaped, w, r)
 					default:
 						s.notAllowed(w, r, "GET")
 					}
@@ -192,9 +192,9 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 				}
 			}
 			switch elem[0] {
-			case 'a': // Prefix: "api/v1/healthcheck"
+			case 'h': // Prefix: "healthcheck"
 
-				if l := len("api/v1/healthcheck"); len(elem) >= l && elem[0:l] == "api/v1/healthcheck" {
+				if l := len("healthcheck"); len(elem) >= l && elem[0:l] == "healthcheck" {
 					elem = elem[l:]
 				} else {
 					break
@@ -204,10 +204,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					// Leaf node.
 					switch method {
 					case "GET":
-						r.name = APIV1HealthcheckGetOperation
+						r.name = HealthcheckGetOperation
 						r.summary = ""
 						r.operationID = ""
-						r.pathPattern = "/api/v1/healthcheck"
+						r.pathPattern = "/healthcheck"
 						r.args = args
 						r.count = 0
 						return r, true

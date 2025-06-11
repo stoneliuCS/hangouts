@@ -13,19 +13,19 @@ type UnimplementedHandler struct{}
 
 var _ Handler = UnimplementedHandler{}
 
-// APIV1HealthcheckGet implements GET /api/v1/healthcheck operation.
-//
-// GET /api/v1/healthcheck
-func (UnimplementedHandler) APIV1HealthcheckGet(ctx context.Context) (r *APIV1HealthcheckGetOK, _ error) {
-	return r, ht.ErrNotImplemented
-}
-
 // Get implements GET / operation.
 //
 // API documentation.
 //
 // GET /
 func (UnimplementedHandler) Get(ctx context.Context) (r GetOK, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// HealthcheckGet implements GET /healthcheck operation.
+//
+// GET /healthcheck
+func (UnimplementedHandler) HealthcheckGet(ctx context.Context) (r *HealthcheckGetOK, _ error) {
 	return r, ht.ErrNotImplemented
 }
 

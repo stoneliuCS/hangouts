@@ -4,6 +4,7 @@ import (
 	"context"
 	api "hangouts/gen"
 	"hangouts/internal/controller"
+	"hangouts/internal/database"
 	"log/slog"
 	"strings"
 
@@ -19,9 +20,9 @@ type Handler struct {
 }
 
 // Creates a new handler for all defined API endpoints
-func NewHandler(controller controller.Controller, logger *slog.Logger) api.Handler {
+func NewHandler(db database.Database, logger *slog.Logger) api.Handler {
 	return Handler{
-		controller,
+		controller.CreateController(db, logger),
 		logger,
 	}
 }
@@ -31,8 +32,8 @@ func (h Handler) NewError(ctx context.Context, err error) *api.ErrorSchemaStatus
 }
 
 // Define a method on the Healthcheckservice method that pings the server.
-func (h Handler) APIV1HealthcheckGet(ctx context.Context) (*api.APIV1HealthcheckGetOK, error) {
-	return &api.APIV1HealthcheckGetOK{Message: api.OptAPIV1HealthcheckGetOKMessage{Value: "OK", Set: true}}, nil
+func (h Handler) HealthcheckGet(ctx context.Context) (*api.HealthcheckGetOK, error) {
+	return &api.HealthcheckGetOK{Message: api.OptHealthcheckGetOKMessage{Value: "OK", Set: true}}, nil
 }
 
 func (h Handler) Get(ctx context.Context) (api.GetOK, error) {

@@ -15,7 +15,7 @@ import (
 	"github.com/ogen-go/ogen/validate"
 )
 
-func decodeAPIV1HealthcheckGetResponse(resp *http.Response) (res *APIV1HealthcheckGetOK, _ error) {
+func decodeGetResponse(resp *http.Response) (res GetOK, _ error) {
 	switch resp.StatusCode {
 	case 200:
 		// Code 200.
@@ -24,40 +24,15 @@ func decodeAPIV1HealthcheckGetResponse(resp *http.Response) (res *APIV1Healthche
 			return res, errors.Wrap(err, "parse media type")
 		}
 		switch {
-		case ct == "application/json":
-			buf, err := io.ReadAll(resp.Body)
+		case ct == "text/html":
+			reader := resp.Body
+			b, err := io.ReadAll(reader)
 			if err != nil {
 				return res, err
 			}
-			d := jx.DecodeBytes(buf)
 
-			var response APIV1HealthcheckGetOK
-			if err := func() error {
-				if err := response.Decode(d); err != nil {
-					return err
-				}
-				if err := d.Skip(); err != io.EOF {
-					return errors.New("unexpected trailing data")
-				}
-				return nil
-			}(); err != nil {
-				err = &ogenerrors.DecodeBodyError{
-					ContentType: ct,
-					Body:        buf,
-					Err:         err,
-				}
-				return res, err
-			}
-			// Validate response.
-			if err := func() error {
-				if err := response.Validate(); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return res, errors.Wrap(err, "validate")
-			}
-			return &response, nil
+			response := GetOK{Data: bytes.NewReader(b)}
+			return response, nil
 		default:
 			return res, validate.InvalidContentType(ct)
 		}
@@ -107,7 +82,7 @@ func decodeAPIV1HealthcheckGetResponse(resp *http.Response) (res *APIV1Healthche
 	return res, errors.Wrap(defRes, "error")
 }
 
-func decodeGetResponse(resp *http.Response) (res GetOK, _ error) {
+func decodeHealthcheckGetResponse(resp *http.Response) (res *HealthcheckGetOK, _ error) {
 	switch resp.StatusCode {
 	case 200:
 		// Code 200.
@@ -116,15 +91,40 @@ func decodeGetResponse(resp *http.Response) (res GetOK, _ error) {
 			return res, errors.Wrap(err, "parse media type")
 		}
 		switch {
-		case ct == "text/html":
-			reader := resp.Body
-			b, err := io.ReadAll(reader)
+		case ct == "application/json":
+			buf, err := io.ReadAll(resp.Body)
 			if err != nil {
 				return res, err
 			}
+			d := jx.DecodeBytes(buf)
 
-			response := GetOK{Data: bytes.NewReader(b)}
-			return response, nil
+			var response HealthcheckGetOK
+			if err := func() error {
+				if err := response.Decode(d); err != nil {
+					return err
+				}
+				if err := d.Skip(); err != io.EOF {
+					return errors.New("unexpected trailing data")
+				}
+				return nil
+			}(); err != nil {
+				err = &ogenerrors.DecodeBodyError{
+					ContentType: ct,
+					Body:        buf,
+					Err:         err,
+				}
+				return res, err
+			}
+			// Validate response.
+			if err := func() error {
+				if err := response.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return res, errors.Wrap(err, "validate")
+			}
+			return &response, nil
 		default:
 			return res, validate.InvalidContentType(ct)
 		}
