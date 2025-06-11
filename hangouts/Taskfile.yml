@@ -1,0 +1,42 @@
+---
+version: "3"
+
+tasks:
+  db-up:
+    deps:
+      - generate
+    summary: Starts the local postgres server
+    cmds:
+      - docker compose up
+  run:
+    deps:
+      - build
+    summary: Runs the backend server
+    cmds:
+      - ./server
+  build:
+    deps:
+      - generate
+    summary: Build backend executables
+    sources:
+      - ./**/*.go
+    generates:
+      - server
+    cmds:
+      - go mod download
+      - go build ./cmd/server
+  generate:
+    aliases:
+      - gen
+    summary: Generate server code from OpenAPI spec
+    sources:
+      - ../openapi.yaml
+    generates:
+      - gen/
+    cmds:
+      - bun run ../api-docs/index.ts
+      - go generate ./...
+  clean:
+    summary: Delete build files
+    cmds:
+      - rm -f server
