@@ -3,6 +3,7 @@
 package api
 
 import (
+	"bytes"
 	"io"
 	"mime"
 	"net/http"
@@ -14,7 +15,7 @@ import (
 	"github.com/ogen-go/ogen/validate"
 )
 
-func decodeAPIV1HealthcheckGetResponse(resp *http.Response) (res *APIV1HealthcheckGetOK, _ error) {
+func decodeAPIV1HealthcheckGetResponse(resp *http.Response) (res APIV1HealthcheckGetRes, _ error) {
 	switch resp.StatusCode {
 	case 200:
 		// Code 200.
@@ -61,8 +62,8 @@ func decodeAPIV1HealthcheckGetResponse(resp *http.Response) (res *APIV1Healthche
 			return res, validate.InvalidContentType(ct)
 		}
 	}
-	// Convenient error response.
-	defRes, err := func() (res *ErrRespStatusCode, err error) {
+	// Default response.
+	res, err := func() (res APIV1HealthcheckGetRes, err error) {
 		ct, _, err := mime.ParseMediaType(resp.Header.Get("Content-Type"))
 		if err != nil {
 			return res, errors.Wrap(err, "parse media type")
@@ -75,7 +76,7 @@ func decodeAPIV1HealthcheckGetResponse(resp *http.Response) (res *APIV1Healthche
 			}
 			d := jx.DecodeBytes(buf)
 
-			var response ErrResp
+			var response APIV1HealthcheckGetDef
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -92,7 +93,7 @@ func decodeAPIV1HealthcheckGetResponse(resp *http.Response) (res *APIV1Healthche
 				}
 				return res, err
 			}
-			return &ErrRespStatusCode{
+			return &APIV1HealthcheckGetDefStatusCode{
 				StatusCode: resp.StatusCode,
 				Response:   response,
 			}, nil
@@ -103,5 +104,30 @@ func decodeAPIV1HealthcheckGetResponse(resp *http.Response) (res *APIV1Healthche
 	if err != nil {
 		return res, errors.Wrapf(err, "default (code %d)", resp.StatusCode)
 	}
-	return res, errors.Wrap(defRes, "error")
+	return res, nil
+}
+
+func decodeGetResponse(resp *http.Response) (res GetOK, _ error) {
+	switch resp.StatusCode {
+	case 200:
+		// Code 200.
+		ct, _, err := mime.ParseMediaType(resp.Header.Get("Content-Type"))
+		if err != nil {
+			return res, errors.Wrap(err, "parse media type")
+		}
+		switch {
+		case ct == "text/html":
+			reader := resp.Body
+			b, err := io.ReadAll(reader)
+			if err != nil {
+				return res, err
+			}
+
+			response := GetOK{Data: bytes.NewReader(b)}
+			return response, nil
+		default:
+			return res, validate.InvalidContentType(ct)
+		}
+	}
+	return res, validate.UnexpectedStatusCode(resp.StatusCode)
 }

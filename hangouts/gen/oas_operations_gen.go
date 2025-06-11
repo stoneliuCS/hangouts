@@ -7,4 +7,5 @@ type OperationName = string
 
 const (
 	APIV1HealthcheckGetOperation OperationName = "APIV1HealthcheckGet"
+	GetOperation                 OperationName = "Get"
 )

@@ -3,14 +3,52 @@
 package api
 
 import (
-	"fmt"
+	"io"
 
 	"github.com/go-faster/errors"
 )
 
-func (s *ErrRespStatusCode) Error() string {
-	return fmt.Sprintf("code %d: %+v", s.StatusCode, s.Response)
+type APIV1HealthcheckGetDef struct {
+	Message OptString `json:"message"`
 }
+
+// GetMessage returns the value of Message.
+func (s *APIV1HealthcheckGetDef) GetMessage() OptString {
+	return s.Message
+}
+
+// SetMessage sets the value of Message.
+func (s *APIV1HealthcheckGetDef) SetMessage(val OptString) {
+	s.Message = val
+}
+
+// APIV1HealthcheckGetDefStatusCode wraps APIV1HealthcheckGetDef with StatusCode.
+type APIV1HealthcheckGetDefStatusCode struct {
+	StatusCode int
+	Response   APIV1HealthcheckGetDef
+}
+
+// GetStatusCode returns the value of StatusCode.
+func (s *APIV1HealthcheckGetDefStatusCode) GetStatusCode() int {
+	return s.StatusCode
+}
+
+// GetResponse returns the value of Response.
+func (s *APIV1HealthcheckGetDefStatusCode) GetResponse() APIV1HealthcheckGetDef {
+	return s.Response
+}
+
+// SetStatusCode sets the value of StatusCode.
+func (s *APIV1HealthcheckGetDefStatusCode) SetStatusCode(val int) {
+	s.StatusCode = val
+}
+
+// SetResponse sets the value of Response.
+func (s *APIV1HealthcheckGetDefStatusCode) SetResponse(val APIV1HealthcheckGetDef) {
+	s.Response = val
+}
+
+func (*APIV1HealthcheckGetDefStatusCode) aPIV1HealthcheckGetRes() {}
 
 type APIV1HealthcheckGetOK struct {
 	Message OptAPIV1HealthcheckGetOKMessage `json:"message"`
@@ -25,6 +63,8 @@ func (s *APIV1HealthcheckGetOK) GetMessage() OptAPIV1HealthcheckGetOKMessage {
 func (s *APIV1HealthcheckGetOK) SetMessage(val OptAPIV1HealthcheckGetOKMessage) {
 	s.Message = val
 }
+
+func (*APIV1HealthcheckGetOK) aPIV1HealthcheckGetRes() {}
 
 type APIV1HealthcheckGetOKMessage string
 
@@ -60,44 +100,18 @@ func (s *APIV1HealthcheckGetOKMessage) UnmarshalText(data []byte) error {
 	}
 }
 
-type ErrResp struct {
-	Message OptString `json:"message"`
+type GetOK struct {
+	Data io.Reader
 }
 
-// GetMessage returns the value of Message.
-func (s *ErrResp) GetMessage() OptString {
-	return s.Message
-}
-
-// SetMessage sets the value of Message.
-func (s *ErrResp) SetMessage(val OptString) {
-	s.Message = val
-}
-
-// ErrRespStatusCode wraps ErrResp with StatusCode.
-type ErrRespStatusCode struct {
-	StatusCode int
-	Response   ErrResp
-}
-
-// GetStatusCode returns the value of StatusCode.
-func (s *ErrRespStatusCode) GetStatusCode() int {
-	return s.StatusCode
-}
-
-// GetResponse returns the value of Response.
-func (s *ErrRespStatusCode) GetResponse() ErrResp {
-	return s.Response
-}
-
-// SetStatusCode sets the value of StatusCode.
-func (s *ErrRespStatusCode) SetStatusCode(val int) {
-	s.StatusCode = val
-}
-
-// SetResponse sets the value of Response.
-func (s *ErrRespStatusCode) SetResponse(val ErrResp) {
-	s.Response = val
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s GetOK) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
 }
 
 // NewOptAPIV1HealthcheckGetOKMessage returns new OptAPIV1HealthcheckGetOKMessage with value set to v.

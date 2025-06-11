@@ -48,24 +48,45 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 		switch elem[0] {
-		case '/': // Prefix: "/api/v1/healthcheck"
+		case '/': // Prefix: "/"
 
-			if l := len("/api/v1/healthcheck"); len(elem) >= l && elem[0:l] == "/api/v1/healthcheck" {
+			if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
 				elem = elem[l:]
 			} else {
 				break
 			}
 
 			if len(elem) == 0 {
-				// Leaf node.
 				switch r.Method {
 				case "GET":
-					s.handleAPIV1HealthcheckGetRequest([0]string{}, elemIsEscaped, w, r)
+					s.handleGetRequest([0]string{}, elemIsEscaped, w, r)
 				default:
 					s.notAllowed(w, r, "GET")
 				}
 
 				return
+			}
+			switch elem[0] {
+			case 'a': // Prefix: "api/v1/healthcheck"
+
+				if l := len("api/v1/healthcheck"); len(elem) >= l && elem[0:l] == "api/v1/healthcheck" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				if len(elem) == 0 {
+					// Leaf node.
+					switch r.Method {
+					case "GET":
+						s.handleAPIV1HealthcheckGetRequest([0]string{}, elemIsEscaped, w, r)
+					default:
+						s.notAllowed(w, r, "GET")
+					}
+
+					return
+				}
+
 			}
 
 		}
@@ -148,28 +169,53 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 			break
 		}
 		switch elem[0] {
-		case '/': // Prefix: "/api/v1/healthcheck"
+		case '/': // Prefix: "/"
 
-			if l := len("/api/v1/healthcheck"); len(elem) >= l && elem[0:l] == "/api/v1/healthcheck" {
+			if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
 				elem = elem[l:]
 			} else {
 				break
 			}
 
 			if len(elem) == 0 {
-				// Leaf node.
 				switch method {
 				case "GET":
-					r.name = APIV1HealthcheckGetOperation
-					r.summary = ""
+					r.name = GetOperation
+					r.summary = "API documentation."
 					r.operationID = ""
-					r.pathPattern = "/api/v1/healthcheck"
+					r.pathPattern = "/"
 					r.args = args
 					r.count = 0
 					return r, true
 				default:
 					return
 				}
+			}
+			switch elem[0] {
+			case 'a': // Prefix: "api/v1/healthcheck"
+
+				if l := len("api/v1/healthcheck"); len(elem) >= l && elem[0:l] == "api/v1/healthcheck" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				if len(elem) == 0 {
+					// Leaf node.
+					switch method {
+					case "GET":
+						r.name = APIV1HealthcheckGetOperation
+						r.summary = ""
+						r.operationID = ""
+						r.pathPattern = "/api/v1/healthcheck"
+						r.args = args
+						r.count = 0
+						return r, true
+					default:
+						return
+					}
+				}
+
 			}
 
 		}

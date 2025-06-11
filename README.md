@@ -2,4 +2,4 @@
 
 _"What should we do?"_
 
-Build customized, detailed plans instantly with AI!
+Build customized, detailed plans instantly with hangouts.ai!

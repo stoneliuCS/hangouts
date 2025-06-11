@@ -4,8 +4,14 @@ import (
 	"context"
 	api "hangouts/gen"
 	"hangouts/internal/controller"
+	"hangouts/internal/utils"
 	"log/slog"
+	"strings"
+
+	scalar "github.com/MarceloPetrucio/go-scalar-api-reference"
 )
+
+var openapiSpec string = "../openapi.json"
 
 // Handles incoming API requests
 type Handler struct {
@@ -22,10 +28,16 @@ func NewHandler(controller controller.Controller, logger *slog.Logger) api.Handl
 }
 
 // Define a method on the Healthcheckservice method that pings the server.
-func (h Handler) APIV1HealthcheckGet(ctx context.Context) (*api.APIV1HealthcheckGetOK, error) {
-	return &api.APIV1HealthcheckGetOK{Message: api.OptAPIV1HealthcheckGetOKMessage{"OK", true}}, nil
+func (h Handler) APIV1HealthcheckGet(ctx context.Context) (api.APIV1HealthcheckGetRes, error) {
+	return &api.APIV1HealthcheckGetOK{Message: api.OptAPIV1HealthcheckGetOKMessage{Value: "OK", Set: true}}, nil
 }
 
-func (h Handler) NewError(ctx context.Context, err error) *api.ErrRespStatusCode {
-	return &api.ErrRespStatusCode{StatusCode: 500, Response: api.ErrResp{Message: api.OptString{}}}
+func (h Handler) Get(ctx context.Context) (api.GetOK, error) {
+	scalar_func := func() (string, error) {
+		return scalar.ApiReferenceHTML(&scalar.Options{
+			SpecURL: openapiSpec,
+		})
+	}
+	html := utils.SafeCall(scalar_func)
+	return api.GetOK{Data: strings.NewReader(html)}, nil
 }

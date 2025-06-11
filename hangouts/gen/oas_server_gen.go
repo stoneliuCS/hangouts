@@ -11,11 +11,13 @@ type Handler interface {
 	// APIV1HealthcheckGet implements GET /api/v1/healthcheck operation.
 	//
 	// GET /api/v1/healthcheck
-	APIV1HealthcheckGet(ctx context.Context) (*APIV1HealthcheckGetOK, error)
-	// NewError creates *ErrRespStatusCode from error returned by handler.
+	APIV1HealthcheckGet(ctx context.Context) (APIV1HealthcheckGetRes, error)
+	// Get implements GET / operation.
 	//
-	// Used for common default response.
-	NewError(ctx context.Context, err error) *ErrRespStatusCode
+	// API documentation.
+	//
+	// GET /
+	Get(ctx context.Context) (GetOK, error)
 }
 
 // Server implements http server based on OpenAPI v3 specification and

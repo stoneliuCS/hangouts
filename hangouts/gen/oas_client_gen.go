@@ -29,7 +29,13 @@ type Invoker interface {
 	// APIV1HealthcheckGet invokes GET /api/v1/healthcheck operation.
 	//
 	// GET /api/v1/healthcheck
-	APIV1HealthcheckGet(ctx context.Context) (*APIV1HealthcheckGetOK, error)
+	APIV1HealthcheckGet(ctx context.Context) (APIV1HealthcheckGetRes, error)
+	// Get invokes GET / operation.
+	//
+	// API documentation.
+	//
+	// GET /
+	Get(ctx context.Context) (GetOK, error)
 }
 
 // Client implements OAS client.
@@ -37,12 +43,8 @@ type Client struct {
 	serverURL *url.URL
 	baseClient
 }
-type errorHandler interface {
-	NewError(ctx context.Context, err error) *ErrRespStatusCode
-}
 
 var _ Handler = struct {
-	errorHandler
 	*Client
 }{}
 
@@ -82,12 +84,12 @@ func (c *Client) requestURL(ctx context.Context) *url.URL {
 // APIV1HealthcheckGet invokes GET /api/v1/healthcheck operation.
 //
 // GET /api/v1/healthcheck
-func (c *Client) APIV1HealthcheckGet(ctx context.Context) (*APIV1HealthcheckGetOK, error) {
+func (c *Client) APIV1HealthcheckGet(ctx context.Context) (APIV1HealthcheckGetRes, error) {
 	res, err := c.sendAPIV1HealthcheckGet(ctx)
 	return res, err
 }
 
-func (c *Client) sendAPIV1HealthcheckGet(ctx context.Context) (res *APIV1HealthcheckGetOK, err error) {
+func (c *Client) sendAPIV1HealthcheckGet(ctx context.Context) (res APIV1HealthcheckGetRes, err error) {
 	otelAttrs := []attribute.KeyValue{
 		semconv.HTTPRequestMethodKey.String("GET"),
 		semconv.HTTPRouteKey.String("/api/v1/healthcheck"),
@@ -141,6 +143,77 @@ func (c *Client) sendAPIV1HealthcheckGet(ctx context.Context) (res *APIV1Healthc
 
 	stage = "DecodeResponse"
 	result, err := decodeAPIV1HealthcheckGetResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// Get invokes GET / operation.
+//
+// API documentation.
+//
+// GET /
+func (c *Client) Get(ctx context.Context) (GetOK, error) {
+	res, err := c.sendGet(ctx)
+	return res, err
+}
+
+func (c *Client) sendGet(ctx context.Context) (res GetOK, err error) {
+	otelAttrs := []attribute.KeyValue{
+		semconv.HTTPRequestMethodKey.String("GET"),
+		semconv.HTTPRouteKey.String("/"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, GetOperation,
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "GET", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeGetResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
