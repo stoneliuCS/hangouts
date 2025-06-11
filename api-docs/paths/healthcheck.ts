@@ -7,6 +7,7 @@ import {
   Responses,
   String,
 } from "fluid-oas";
+import { DEFAULT_ERROR_RESPONSE } from "./common";
 
 export const HEALTHCHECK_ROUTE = PathItem.addMethod({
   get: Operation.addResponses(
@@ -18,12 +19,6 @@ export const HEALTHCHECK_ROUTE = PathItem.addMethod({
           }),
         ),
       }),
-    }).addDefault(
-      Response.addDescription("Server request failed.").addContents({
-        "application/json": MediaType.addSchema(
-          Object.addProperties({ message: String }),
-        ),
-      }),
-    ),
+    }).addDefault(DEFAULT_ERROR_RESPONSE),
   ),
 });

@@ -96,7 +96,7 @@ func (s *Server) handleAPIV1HealthcheckGetRequest(args [0]string, argsEscaped bo
 		err error
 	)
 
-	var response APIV1HealthcheckGetRes
+	var response *APIV1HealthcheckGetOK
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
@@ -111,7 +111,7 @@ func (s *Server) handleAPIV1HealthcheckGetRequest(args [0]string, argsEscaped bo
 		type (
 			Request  = struct{}
 			Params   = struct{}
-			Response = APIV1HealthcheckGetRes
+			Response = *APIV1HealthcheckGetOK
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -130,8 +130,19 @@ func (s *Server) handleAPIV1HealthcheckGetRequest(args [0]string, argsEscaped bo
 		response, err = s.h.APIV1HealthcheckGet(ctx)
 	}
 	if err != nil {
-		defer recordError("Internal", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		if errRes, ok := errors.Into[*ErrorSchemaStatusCode](err); ok {
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
@@ -248,8 +259,19 @@ func (s *Server) handleGetRequest(args [0]string, argsEscaped bool, w http.Respo
 		response, err = s.h.Get(ctx)
 	}
 	if err != nil {
-		defer recordError("Internal", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		if errRes, ok := errors.Into[*ErrorSchemaStatusCode](err); ok {
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 

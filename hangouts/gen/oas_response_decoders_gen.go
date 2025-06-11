@@ -15,7 +15,7 @@ import (
 	"github.com/ogen-go/ogen/validate"
 )
 
-func decodeAPIV1HealthcheckGetResponse(resp *http.Response) (res APIV1HealthcheckGetRes, _ error) {
+func decodeAPIV1HealthcheckGetResponse(resp *http.Response) (res *APIV1HealthcheckGetOK, _ error) {
 	switch resp.StatusCode {
 	case 200:
 		// Code 200.
@@ -62,8 +62,8 @@ func decodeAPIV1HealthcheckGetResponse(resp *http.Response) (res APIV1Healthchec
 			return res, validate.InvalidContentType(ct)
 		}
 	}
-	// Default response.
-	res, err := func() (res APIV1HealthcheckGetRes, err error) {
+	// Convenient error response.
+	defRes, err := func() (res *ErrorSchemaStatusCode, err error) {
 		ct, _, err := mime.ParseMediaType(resp.Header.Get("Content-Type"))
 		if err != nil {
 			return res, errors.Wrap(err, "parse media type")
@@ -76,7 +76,7 @@ func decodeAPIV1HealthcheckGetResponse(resp *http.Response) (res APIV1Healthchec
 			}
 			d := jx.DecodeBytes(buf)
 
-			var response APIV1HealthcheckGetDef
+			var response ErrorSchema
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -93,7 +93,7 @@ func decodeAPIV1HealthcheckGetResponse(resp *http.Response) (res APIV1Healthchec
 				}
 				return res, err
 			}
-			return &APIV1HealthcheckGetDefStatusCode{
+			return &ErrorSchemaStatusCode{
 				StatusCode: resp.StatusCode,
 				Response:   response,
 			}, nil
@@ -104,7 +104,7 @@ func decodeAPIV1HealthcheckGetResponse(resp *http.Response) (res APIV1Healthchec
 	if err != nil {
 		return res, errors.Wrapf(err, "default (code %d)", resp.StatusCode)
 	}
-	return res, nil
+	return res, errors.Wrap(defRes, "error")
 }
 
 func decodeGetResponse(resp *http.Response) (res GetOK, _ error) {
@@ -129,5 +129,47 @@ func decodeGetResponse(resp *http.Response) (res GetOK, _ error) {
 			return res, validate.InvalidContentType(ct)
 		}
 	}
-	return res, validate.UnexpectedStatusCode(resp.StatusCode)
+	// Convenient error response.
+	defRes, err := func() (res *ErrorSchemaStatusCode, err error) {
+		ct, _, err := mime.ParseMediaType(resp.Header.Get("Content-Type"))
+		if err != nil {
+			return res, errors.Wrap(err, "parse media type")
+		}
+		switch {
+		case ct == "application/json":
+			buf, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return res, err
+			}
+			d := jx.DecodeBytes(buf)
+
+			var response ErrorSchema
+			if err := func() error {
+				if err := response.Decode(d); err != nil {
+					return err
+				}
+				if err := d.Skip(); err != io.EOF {
+					return errors.New("unexpected trailing data")
+				}
+				return nil
+			}(); err != nil {
+				err = &ogenerrors.DecodeBodyError{
+					ContentType: ct,
+					Body:        buf,
+					Err:         err,
+				}
+				return res, err
+			}
+			return &ErrorSchemaStatusCode{
+				StatusCode: resp.StatusCode,
+				Response:   response,
+			}, nil
+		default:
+			return res, validate.InvalidContentType(ct)
+		}
+	}()
+	if err != nil {
+		return res, errors.Wrapf(err, "default (code %d)", resp.StatusCode)
+	}
+	return res, errors.Wrap(defRes, "error")
 }

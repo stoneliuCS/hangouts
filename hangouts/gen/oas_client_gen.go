@@ -29,7 +29,7 @@ type Invoker interface {
 	// APIV1HealthcheckGet invokes GET /api/v1/healthcheck operation.
 	//
 	// GET /api/v1/healthcheck
-	APIV1HealthcheckGet(ctx context.Context) (APIV1HealthcheckGetRes, error)
+	APIV1HealthcheckGet(ctx context.Context) (*APIV1HealthcheckGetOK, error)
 	// Get invokes GET / operation.
 	//
 	// API documentation.
@@ -43,8 +43,12 @@ type Client struct {
 	serverURL *url.URL
 	baseClient
 }
+type errorHandler interface {
+	NewError(ctx context.Context, err error) *ErrorSchemaStatusCode
+}
 
 var _ Handler = struct {
+	errorHandler
 	*Client
 }{}
 
@@ -84,12 +88,12 @@ func (c *Client) requestURL(ctx context.Context) *url.URL {
 // APIV1HealthcheckGet invokes GET /api/v1/healthcheck operation.
 //
 // GET /api/v1/healthcheck
-func (c *Client) APIV1HealthcheckGet(ctx context.Context) (APIV1HealthcheckGetRes, error) {
+func (c *Client) APIV1HealthcheckGet(ctx context.Context) (*APIV1HealthcheckGetOK, error) {
 	res, err := c.sendAPIV1HealthcheckGet(ctx)
 	return res, err
 }
 
-func (c *Client) sendAPIV1HealthcheckGet(ctx context.Context) (res APIV1HealthcheckGetRes, err error) {
+func (c *Client) sendAPIV1HealthcheckGet(ctx context.Context) (res *APIV1HealthcheckGetOK, err error) {
 	otelAttrs := []attribute.KeyValue{
 		semconv.HTTPRequestMethodKey.String("GET"),
 		semconv.HTTPRouteKey.String("/api/v1/healthcheck"),

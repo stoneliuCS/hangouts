@@ -15,3 +15,8 @@ tasks:
     cmds:
       - echo "Building api documentation and re-generating server and client code..."
       - ./scripts/openapi_generate.sh
+      - cd ./hangouts && go generate
+
+  run-server:
+    cmds:
+      - ./hangouts/scripts/run.sh

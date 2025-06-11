@@ -3,52 +3,15 @@
 package api
 
 import (
+	"fmt"
 	"io"
 
 	"github.com/go-faster/errors"
 )
 
-type APIV1HealthcheckGetDef struct {
-	Message OptString `json:"message"`
+func (s *ErrorSchemaStatusCode) Error() string {
+	return fmt.Sprintf("code %d: %+v", s.StatusCode, s.Response)
 }
-
-// GetMessage returns the value of Message.
-func (s *APIV1HealthcheckGetDef) GetMessage() OptString {
-	return s.Message
-}
-
-// SetMessage sets the value of Message.
-func (s *APIV1HealthcheckGetDef) SetMessage(val OptString) {
-	s.Message = val
-}
-
-// APIV1HealthcheckGetDefStatusCode wraps APIV1HealthcheckGetDef with StatusCode.
-type APIV1HealthcheckGetDefStatusCode struct {
-	StatusCode int
-	Response   APIV1HealthcheckGetDef
-}
-
-// GetStatusCode returns the value of StatusCode.
-func (s *APIV1HealthcheckGetDefStatusCode) GetStatusCode() int {
-	return s.StatusCode
-}
-
-// GetResponse returns the value of Response.
-func (s *APIV1HealthcheckGetDefStatusCode) GetResponse() APIV1HealthcheckGetDef {
-	return s.Response
-}
-
-// SetStatusCode sets the value of StatusCode.
-func (s *APIV1HealthcheckGetDefStatusCode) SetStatusCode(val int) {
-	s.StatusCode = val
-}
-
-// SetResponse sets the value of Response.
-func (s *APIV1HealthcheckGetDefStatusCode) SetResponse(val APIV1HealthcheckGetDef) {
-	s.Response = val
-}
-
-func (*APIV1HealthcheckGetDefStatusCode) aPIV1HealthcheckGetRes() {}
 
 type APIV1HealthcheckGetOK struct {
 	Message OptAPIV1HealthcheckGetOKMessage `json:"message"`
@@ -63,8 +26,6 @@ func (s *APIV1HealthcheckGetOK) GetMessage() OptAPIV1HealthcheckGetOKMessage {
 func (s *APIV1HealthcheckGetOK) SetMessage(val OptAPIV1HealthcheckGetOKMessage) {
 	s.Message = val
 }
-
-func (*APIV1HealthcheckGetOK) aPIV1HealthcheckGetRes() {}
 
 type APIV1HealthcheckGetOKMessage string
 
@@ -98,6 +59,48 @@ func (s *APIV1HealthcheckGetOKMessage) UnmarshalText(data []byte) error {
 	default:
 		return errors.Errorf("invalid value: %q", data)
 	}
+}
+
+// Error Schema.
+// Ref: #/components/schemas/ErrorSchema
+type ErrorSchema struct {
+	Error string `json:"error"`
+}
+
+// GetError returns the value of Error.
+func (s *ErrorSchema) GetError() string {
+	return s.Error
+}
+
+// SetError sets the value of Error.
+func (s *ErrorSchema) SetError(val string) {
+	s.Error = val
+}
+
+// ErrorSchemaStatusCode wraps ErrorSchema with StatusCode.
+type ErrorSchemaStatusCode struct {
+	StatusCode int
+	Response   ErrorSchema
+}
+
+// GetStatusCode returns the value of StatusCode.
+func (s *ErrorSchemaStatusCode) GetStatusCode() int {
+	return s.StatusCode
+}
+
+// GetResponse returns the value of Response.
+func (s *ErrorSchemaStatusCode) GetResponse() ErrorSchema {
+	return s.Response
+}
+
+// SetStatusCode sets the value of StatusCode.
+func (s *ErrorSchemaStatusCode) SetStatusCode(val int) {
+	s.StatusCode = val
+}
+
+// SetResponse sets the value of Response.
+func (s *ErrorSchemaStatusCode) SetResponse(val ErrorSchema) {
+	s.Response = val
 }
 
 type GetOK struct {
@@ -154,52 +157,6 @@ func (o OptAPIV1HealthcheckGetOKMessage) Get() (v APIV1HealthcheckGetOKMessage, 
 
 // Or returns value if set, or given parameter if does not.
 func (o OptAPIV1HealthcheckGetOKMessage) Or(d APIV1HealthcheckGetOKMessage) APIV1HealthcheckGetOKMessage {
-	if v, ok := o.Get(); ok {
-		return v
-	}
-	return d
-}
-
-// NewOptString returns new OptString with value set to v.
-func NewOptString(v string) OptString {
-	return OptString{
-		Value: v,
-		Set:   true,
-	}
-}
-
-// OptString is optional string.
-type OptString struct {
-	Value string
-	Set   bool
-}
-
-// IsSet returns true if OptString was set.
-func (o OptString) IsSet() bool { return o.Set }
-
-// Reset unsets value.
-func (o *OptString) Reset() {
-	var v string
-	o.Value = v
-	o.Set = false
-}
-
-// SetTo sets value to v.
-func (o *OptString) SetTo(v string) {
-	o.Set = true
-	o.Value = v
-}
-
-// Get returns value and boolean that denotes whether value was set.
-func (o OptString) Get() (v string, ok bool) {
-	if !o.Set {
-		return v, false
-	}
-	return o.Value, true
-}
-
-// Or returns value if set, or given parameter if does not.
-func (o OptString) Or(d string) string {
 	if v, ok := o.Get(); ok {
 		return v
 	}

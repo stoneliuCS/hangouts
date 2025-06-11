@@ -4,7 +4,6 @@ import (
 	"context"
 	api "hangouts/gen"
 	"hangouts/internal/controller"
-	"hangouts/internal/utils"
 	"log/slog"
 	"strings"
 
@@ -27,17 +26,21 @@ func NewHandler(controller controller.Controller, logger *slog.Logger) api.Handl
 	}
 }
 
+func (h Handler) NewError(ctx context.Context, err error) *api.ErrorSchemaStatusCode {
+	return &api.ErrorSchemaStatusCode{StatusCode: 500, Response: api.ErrorSchema{Error: "Internal Server Error."}}
+}
+
 // Define a method on the Healthcheckservice method that pings the server.
-func (h Handler) APIV1HealthcheckGet(ctx context.Context) (api.APIV1HealthcheckGetRes, error) {
+func (h Handler) APIV1HealthcheckGet(ctx context.Context) (*api.APIV1HealthcheckGetOK, error) {
 	return &api.APIV1HealthcheckGetOK{Message: api.OptAPIV1HealthcheckGetOKMessage{Value: "OK", Set: true}}, nil
 }
 
 func (h Handler) Get(ctx context.Context) (api.GetOK, error) {
-	scalar_func := func() (string, error) {
-		return scalar.ApiReferenceHTML(&scalar.Options{
-			SpecURL: openapiSpec,
-		})
+	html, err := scalar.ApiReferenceHTML(&scalar.Options{
+		SpecURL: openapiSpec,
+	})
+	if err != nil {
+		return api.GetOK{}, err
 	}
-	html := utils.SafeCall(scalar_func)
 	return api.GetOK{Data: strings.NewReader(html)}, nil
 }

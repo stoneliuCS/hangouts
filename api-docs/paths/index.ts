@@ -1,4 +1,4 @@
-import { Path, type OpenApiV3_1 } from "fluid-oas";
+import {  Path,  type OpenApiV3_1 } from "fluid-oas";
 import { HEALTHCHECK_ROUTE } from "./healthcheck";
 import { API_DOCS } from "./api-docs";
 

@@ -16,7 +16,7 @@ var _ Handler = UnimplementedHandler{}
 // APIV1HealthcheckGet implements GET /api/v1/healthcheck operation.
 //
 // GET /api/v1/healthcheck
-func (UnimplementedHandler) APIV1HealthcheckGet(ctx context.Context) (r APIV1HealthcheckGetRes, _ error) {
+func (UnimplementedHandler) APIV1HealthcheckGet(ctx context.Context) (r *APIV1HealthcheckGetOK, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -27,4 +27,12 @@ func (UnimplementedHandler) APIV1HealthcheckGet(ctx context.Context) (r APIV1Hea
 // GET /
 func (UnimplementedHandler) Get(ctx context.Context) (r GetOK, _ error) {
 	return r, ht.ErrNotImplemented
+}
+
+// NewError creates *ErrorSchemaStatusCode from error returned by handler.
+//
+// Used for common default response.
+func (UnimplementedHandler) NewError(ctx context.Context, err error) (r *ErrorSchemaStatusCode) {
+	r = new(ErrorSchemaStatusCode)
+	return r
 }
