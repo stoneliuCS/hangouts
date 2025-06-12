@@ -2,12 +2,6 @@
 version: "3"
 
 tasks:
-  db-up:
-    deps:
-      - generate
-    summary: Starts the local postgres server
-    cmds:
-      - docker compose up
   run:
     deps:
       - build

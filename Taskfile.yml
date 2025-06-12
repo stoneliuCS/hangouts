@@ -8,4 +8,9 @@ includes:
   hangouts:
     taskfile: ./hangouts/Taskfile.yml
     dir: ./hangouts
+tasks:
+  build-hangouts-docker:
+    summary: Run hangouts db and server in docker.
+    cmds:
+      - docker compose up
 ...

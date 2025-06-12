@@ -12,7 +12,7 @@ services:
       - postgres-data:/var/lib/postgresql/data
   backend:
     build:
-      dockerfile: dockerfile
+      dockerfile: hangouts.dockerfile
     depends_on:
       - database
     environment:
@@ -20,9 +20,9 @@ services:
       DB_PORT: 5432
       DB_USER: ${DB_USER:?database username not specified}
       DB_PASSWORD: ${DB_PASSWORD:?database password not specified}
-      DB_NAME: hangouts-api
+      DB_NAME: hangouts
     ports:
-      - ${PORT:-8080}:${PORT:-8081}
+      - ${PORT:-8081}:${PORT:-8081}
 volumes:
   postgres-data:
 ...
