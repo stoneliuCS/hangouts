@@ -1,3 +1,4 @@
+// Full integration tests for hangouts server.
 package server_test
 
 import (

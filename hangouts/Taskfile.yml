@@ -7,7 +7,7 @@ tasks:
       - build
     summary: Runs the backend server
     cmds:
-      - ./main
+      - ./main_server
   build:
     deps:
       - generate
@@ -18,7 +18,7 @@ tasks:
       - server
     cmds:
       - go mod download
-      - go build ./main.go
+      - go build -o main_server ./main.go
   generate:
     aliases:
       - gen
@@ -30,6 +30,12 @@ tasks:
     cmds:
       - bun run ../api-docs/index.ts
       - go generate ./...
+  test:
+    summary: Run all tests
+    deps:
+      - build
+    cmds:
+      - go test -v ./...
   format:
     aliases:
       - fmt
