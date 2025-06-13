@@ -37,7 +37,7 @@ func main() {
 	h := handler.NewHandler(logger, services)
 
 	logger.Info("Attaching handler and running server...")
-	server.RunServer(h)
+	server.RunServer(h, ":8081")
 }
 
 // Loads the environment variables as an EnvConfig
