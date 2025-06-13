@@ -1,8 +1,8 @@
 # https://taskfile.dev
 ---
-version: '3'
+version: "3"
 
-dotenv: ['./.env']
+dotenv: ["./.env"]
 
 includes:
   hangouts:
@@ -12,5 +12,6 @@ tasks:
   build-hangouts-docker:
     summary: Run hangouts db and server in docker.
     cmds:
+      - docker compose down
+      - docker rmi -f hangouts-backend:latest
       - docker compose up
-...

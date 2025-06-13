@@ -1,6 +1,8 @@
 package utils
 
-import "log"
+import (
+	"log"
+)
 
 func SafeCall[T any](fn func() (T, error)) T {
 	val, err := fn()

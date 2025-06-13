@@ -2,9 +2,8 @@ package handler
 
 import (
 	"context"
-	api "hangouts/gen"
-	"hangouts/internal/controller"
-	"hangouts/internal/database"
+	api "hangouts/internal/api"
+	"hangouts/internal/controllers"
 	"log/slog"
 	"strings"
 
@@ -15,20 +14,20 @@ var openapiSpec string = "../openapi.json"
 
 // Handles incoming API requests
 type Handler struct {
-	controller controller.Controller // executes business logic
-	logger     *slog.Logger          // event logger
+	controllers *controllers.Controllers
+	logger      *slog.Logger // event logger
 }
 
 // Creates a new handler for all defined API endpoints
-func NewHandler(db database.Database, logger *slog.Logger) api.Handler {
+func NewHandler(logger *slog.Logger, controllers *controllers.Controllers) api.Handler {
 	return Handler{
-		controller.CreateController(db, logger),
+		controllers,
 		logger,
 	}
 }
 
-func (h Handler) NewError(ctx context.Context, err error) *api.ErrorSchemaStatusCode {
-	return &api.ErrorSchemaStatusCode{StatusCode: 500, Response: api.ErrorSchema{Error: "Internal Server Error."}}
+func (h Handler) NewError(ctx context.Context, err error) *api.ErrRespStatusCode {
+	return &api.ErrRespStatusCode{StatusCode: 500, Response: api.ErrResp{Error: "Internal Server Error."}}
 }
 
 // Define a method on the Healthcheckservice method that pings the server.

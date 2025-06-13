@@ -30,6 +30,15 @@ tasks:
     cmds:
       - bun run ../api-docs/index.ts
       - go generate ./...
+  format:
+    aliases:
+      - fmt
+    summary: Format Go code and organize imports
+    sources:
+      - ./**/*.go
+    cmds:
+      - $(go env GOPATH)/bin/goimports -w .
+      - go mod tidy
   clean:
     summary: Delete build files
     cmds:

@@ -67,6 +67,26 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			switch elem[0] {
+			case 'a': // Prefix: "api/v1/user"
+
+				if l := len("api/v1/user"); len(elem) >= l && elem[0:l] == "api/v1/user" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				if len(elem) == 0 {
+					// Leaf node.
+					switch r.Method {
+					case "POST":
+						s.handleAPIV1UserPostRequest([0]string{}, elemIsEscaped, w, r)
+					default:
+						s.notAllowed(w, r, "POST")
+					}
+
+					return
+				}
+
 			case 'h': // Prefix: "healthcheck"
 
 				if l := len("healthcheck"); len(elem) >= l && elem[0:l] == "healthcheck" {
@@ -192,6 +212,30 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 				}
 			}
 			switch elem[0] {
+			case 'a': // Prefix: "api/v1/user"
+
+				if l := len("api/v1/user"); len(elem) >= l && elem[0:l] == "api/v1/user" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				if len(elem) == 0 {
+					// Leaf node.
+					switch method {
+					case "POST":
+						r.name = APIV1UserPostOperation
+						r.summary = ""
+						r.operationID = ""
+						r.pathPattern = "/api/v1/user"
+						r.args = args
+						r.count = 0
+						return r, true
+					default:
+						return
+					}
+				}
+
 			case 'h': // Prefix: "healthcheck"
 
 				if l := len("healthcheck"); len(elem) >= l && elem[0:l] == "healthcheck" {

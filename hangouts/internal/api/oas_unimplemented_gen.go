@@ -13,6 +13,13 @@ type UnimplementedHandler struct{}
 
 var _ Handler = UnimplementedHandler{}
 
+// APIV1UserPost implements POST /api/v1/user operation.
+//
+// POST /api/v1/user
+func (UnimplementedHandler) APIV1UserPost(ctx context.Context, req OptAPIV1UserPostReq) (r APIV1UserPostRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // Get implements GET / operation.
 //
 // API documentation.
@@ -29,10 +36,10 @@ func (UnimplementedHandler) HealthcheckGet(ctx context.Context) (r *HealthcheckG
 	return r, ht.ErrNotImplemented
 }
 
-// NewError creates *ErrorSchemaStatusCode from error returned by handler.
+// NewError creates *ErrRespStatusCode from error returned by handler.
 //
 // Used for common default response.
-func (UnimplementedHandler) NewError(ctx context.Context, err error) (r *ErrorSchemaStatusCode) {
-	r = new(ErrorSchemaStatusCode)
+func (UnimplementedHandler) NewError(ctx context.Context, err error) (r *ErrRespStatusCode) {
+	r = new(ErrRespStatusCode)
 	return r
 }

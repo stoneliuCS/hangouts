@@ -6,7 +6,7 @@ import {
   Responses,
   String,
 } from "fluid-oas";
-import { DEFAULT_ERROR_RESPONSE } from "./common";
+import { DEFAULT_ERROR_RESPONSE } from "./utils";
 
 export const API_DOCS = PathItem.addMethod({
   get: Operation.addSummary("API documentation.").addResponses(

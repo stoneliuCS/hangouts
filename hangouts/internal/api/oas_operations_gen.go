@@ -6,6 +6,7 @@ package api
 type OperationName = string
 
 const (
+	APIV1UserPostOperation  OperationName = "APIV1UserPost"
 	GetOperation            OperationName = "Get"
 	HealthcheckGetOperation OperationName = "HealthcheckGet"
 )

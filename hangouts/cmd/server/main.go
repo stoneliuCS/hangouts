@@ -2,14 +2,18 @@ package main
 
 import (
 	"context"
-	api "hangouts/gen"
+	api "hangouts/internal/api"
+	"hangouts/internal/controllers"
 	"hangouts/internal/database"
 	"hangouts/internal/handler"
+	"hangouts/internal/services"
+	"hangouts/internal/transactions"
 	"hangouts/internal/utils"
 	"log/slog"
 	"net/http"
 
 	"github.com/sethvargo/go-envconfig"
+	"gorm.io/gorm"
 )
 
 func main() {
@@ -19,12 +23,23 @@ func main() {
 	logger.Info("Loading environment variables...")
 	env := loadEnv()
 
-	// Create the database
-	logger.Info("Creating database from environment variables.")
-	db := database.CreateGormPostgresDatabase(env, logger)
+	logger.Info("Creating database from environment variables...")
+	db := database.CreateDatabase(env, logger)
 
-	logger.Info("Creating handler from OpenAPI Specification...")
-	h := createHandler(logger, db)
+	logger.Info("Auto migrating database schemas...")
+	database.AutoMigrate(db)
+
+	logger.Info("Initializing transaction layer...")
+	transactions := createTransactions(logger, db)
+
+	logger.Info("Intializing service layer...")
+	services := createServices(logger, transactions)
+
+	logger.Info("Intializing controller layer...")
+	controllers := createControllers(logger, services)
+
+	logger.Info("Intializing handler layer...")
+	h := createHandler(logger, controllers)
 
 	logger.Info("Attaching handler and running server...")
 	runServer(h)
@@ -40,10 +55,25 @@ func runServer(handler api.Handler) {
 	utils.SafeCallErrorSupplier(serve_func)
 }
 
+func createControllers(logger *slog.Logger, services *services.Services) *controllers.Controllers {
+	userController := controllers.CreateUserController(logger, services.UserService)
+	return &controllers.Controllers{UserController: userController}
+}
+
+func createServices(logger *slog.Logger, transactions *transactions.Transactions) *services.Services {
+	userService := services.CreateUserService(logger, transactions.UserTransaction)
+	return &services.Services{UserService: userService}
+}
+
+func createTransactions(logger *slog.Logger, db *gorm.DB) *transactions.Transactions {
+	userTransactions := transactions.CreateUserTransaction(db, logger)
+	return &transactions.Transactions{UserTransaction: userTransactions}
+}
+
 // Creates the handlers to be used for the server.
-func createHandler(logger *slog.Logger, db database.Database) api.Handler {
+func createHandler(logger *slog.Logger, controllers *controllers.Controllers) api.Handler {
 	// Declare controller
-	h := handler.NewHandler(db, logger)
+	h := handler.NewHandler(logger, controllers)
 	return h
 }
 

@@ -8,6 +8,10 @@ import (
 
 // Handler handles operations described by OpenAPI v3 specification.
 type Handler interface {
+	// APIV1UserPost implements POST /api/v1/user operation.
+	//
+	// POST /api/v1/user
+	APIV1UserPost(ctx context.Context, req OptAPIV1UserPostReq) (APIV1UserPostRes, error)
 	// Get implements GET / operation.
 	//
 	// API documentation.
@@ -18,10 +22,10 @@ type Handler interface {
 	//
 	// GET /healthcheck
 	HealthcheckGet(ctx context.Context) (*HealthcheckGetOK, error)
-	// NewError creates *ErrorSchemaStatusCode from error returned by handler.
+	// NewError creates *ErrRespStatusCode from error returned by handler.
 	//
 	// Used for common default response.
-	NewError(ctx context.Context, err error) *ErrorSchemaStatusCode
+	NewError(ctx context.Context, err error) *ErrRespStatusCode
 }
 
 // Server implements http server based on OpenAPI v3 specification and

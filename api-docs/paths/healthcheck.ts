@@ -7,7 +7,7 @@ import {
   Responses,
   String,
 } from "fluid-oas";
-import { DEFAULT_ERROR_RESPONSE } from "./common";
+import { DEFAULT_ERROR_RESPONSE } from "./utils";
 
 export const HEALTHCHECK_ROUTE = PathItem.addMethod({
   get: Operation.addResponses(
