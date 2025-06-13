@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	api "hangouts/internal/api"
-	"hangouts/internal/controllers"
 	"hangouts/internal/database"
 	"hangouts/internal/handler"
 	"hangouts/internal/services"
@@ -35,11 +34,8 @@ func main() {
 	logger.Info("Intializing service layer...")
 	services := createServices(logger, transactions)
 
-	logger.Info("Intializing controller layer...")
-	controllers := createControllers(logger, services)
-
 	logger.Info("Intializing handler layer...")
-	h := createHandler(logger, controllers)
+	h := createHandler(logger, services)
 
 	logger.Info("Attaching handler and running server...")
 	runServer(h)
@@ -55,11 +51,6 @@ func runServer(handler api.Handler) {
 	utils.SafeCallErrorSupplier(serve_func)
 }
 
-func createControllers(logger *slog.Logger, services *services.Services) *controllers.Controllers {
-	userController := controllers.CreateUserController(logger, services.UserService)
-	return &controllers.Controllers{UserController: userController}
-}
-
 func createServices(logger *slog.Logger, transactions *transactions.Transactions) *services.Services {
 	userService := services.CreateUserService(logger, transactions.UserTransaction)
 	return &services.Services{UserService: userService}
@@ -71,9 +62,9 @@ func createTransactions(logger *slog.Logger, db *gorm.DB) *transactions.Transact
 }
 
 // Creates the handlers to be used for the server.
-func createHandler(logger *slog.Logger, controllers *controllers.Controllers) api.Handler {
+func createHandler(logger *slog.Logger, services *services.Services) api.Handler {
 	// Declare controller
-	h := handler.NewHandler(logger, controllers)
+	h := handler.NewHandler(logger, services)
 	return h
 }
 

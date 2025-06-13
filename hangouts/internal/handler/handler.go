@@ -3,7 +3,7 @@ package handler
 import (
 	"context"
 	api "hangouts/internal/api"
-	"hangouts/internal/controllers"
+	"hangouts/internal/services"
 	"log/slog"
 	"strings"
 
@@ -14,14 +14,14 @@ var openapiSpec string = "../openapi.json"
 
 // Handles incoming API requests
 type Handler struct {
-	controllers *controllers.Controllers
+	services *services.Services
 	logger      *slog.Logger // event logger
 }
 
 // Creates a new handler for all defined API endpoints
-func NewHandler(logger *slog.Logger, controllers *controllers.Controllers) api.Handler {
+func NewHandler(logger *slog.Logger, services *services.Services) api.Handler {
 	return Handler{
-		controllers,
+		services,
 		logger,
 	}
 }
