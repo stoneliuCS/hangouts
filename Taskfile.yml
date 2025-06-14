@@ -8,6 +8,9 @@ includes:
   hangouts:
     taskfile: ./hangouts/Taskfile.yml
     dir: ./hangouts
+  ios:
+    taskfile: ./ios/Taskfile.yml
+    dir: ./ios
 tasks:
   build-hangouts-docker:
     summary: Run hangouts db and server in docker.

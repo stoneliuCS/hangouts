@@ -1,5 +1,6 @@
 # Project requirements
 
+## Hangouts API
 - [Go](https://go.dev)
   - Hangouts server written in Go.
 - [Bun](https://bun.sh)
@@ -10,3 +11,8 @@
   - Go formatter.
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
   - Containerization and integration tests.
+
+## Swift Client
+- xcode v15.0+ (Required for IOS development)
+- [xcodegen](https://github.com/yonaskolb/XcodeGen)
+- [xcode-build-server](https://github.com/SolaWing/xcode-build-server)

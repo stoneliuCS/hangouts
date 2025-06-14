@@ -1,0 +1,8 @@
+---
+version: "3"
+
+tasks:
+  generate-xcode-project:
+    summary: Run hangouts db and server in docker.
+    cmds:
+      - xcodegen generate
