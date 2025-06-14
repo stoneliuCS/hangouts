@@ -2,7 +2,7 @@
 ---
 version: "3"
 
-dotenv: ["./.env"]
+dotenv: ["./.env.test"]
 
 includes:
   hangouts:
@@ -15,3 +15,10 @@ tasks:
       - docker compose down
       - docker rmi -f hangouts-backend:latest
       - docker compose up
+  build-hangouts-prod:
+    summary: Run Hangouts on the production DB.
+    dotenv: ["./.env.production.local"]
+    cmds:
+      - docker compose down
+      - docker rmi -f hangouts-backend:latest
+      - docker compose up backend

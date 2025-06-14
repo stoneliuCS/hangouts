@@ -3,7 +3,7 @@ services:
   database:
     image: postgres:latest
     environment:
-      POSTGRES_DB: hangouts 
+      POSTGRES_DB: ${DB_HOST:?database host not specified} 
       POSTGRES_USER: ${DB_USER:?database username not specified}
       POSTGRES_PASSWORD: ${DB_PASSWORD:?database password not specified}
     ports:
@@ -16,11 +16,11 @@ services:
     depends_on:
       - database
     environment:
-      DB_HOST: database
-      DB_PORT: 5432
+      DB_HOST: ${DB_HOST:?database host not specified}
+      DB_PORT: ${DB_PORT:?database port not specified}
       DB_USER: ${DB_USER:?database username not specified}
       DB_PASSWORD: ${DB_PASSWORD:?database password not specified}
-      DB_NAME: hangouts
+      DB_NAME: ${DB_NAME:?database name not specified}
     ports:
       - ${PORT:-8081}:${PORT:-8081}
 volumes:
