@@ -14,6 +14,9 @@ packages:
   SwiftOpenAPIURLSession:
     url: https://github.com/apple/swift-openapi-urlsession
     from: 1.0.0
+  supabase-swift:
+    url: "https://github.com/supabase/supabase-swift.git"
+    from: "2.0.0"
 
 targets:
   Hangouts:
@@ -21,18 +24,23 @@ targets:
     platform: iOS
     sources:
       - Sources/Hangouts
+      - ./Config.plist
     dependencies:
-      # Link these runtime libraries to your target
       - package: SwiftOpenAPIRuntime
         product: OpenAPIRuntime
       - package: SwiftOpenAPIURLSession
         product: OpenAPIURLSession
+      - package: supabase-swift
+        product: Supabase
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.hangouts.ai
         # Remove or update DEVELOPMENT_TEAM if you have one
         MARKETING_VERSION: "1.0"
         CURRENT_PROJECT_VERSION: "1"
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
     # This is crucial - the build plugin
     buildToolPlugins:
       - package: SwiftOpenAPIGenerator

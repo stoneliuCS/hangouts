@@ -25,3 +25,9 @@ tasks:
       - docker compose down
       - docker rmi -f hangouts-backend:latest
       - docker compose up backend
+  sync-openapi:
+    summary: Sync swift client and go server with openapi
+    cmds:
+      - bun run api-docs/index.ts
+      - task hangouts:generate
+      - task ios:generate-xcode-project

@@ -3,6 +3,7 @@ version: "3"
 
 tasks:
   generate-xcode-project:
-    summary: Run hangouts db and server in docker.
+    summary: Rebuild xcode project with dependencies.
     cmds:
+      - rm -rf ./Hangouts.ai.xcodeproj/
       - xcodegen generate

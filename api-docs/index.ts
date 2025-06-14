@@ -1,4 +1,4 @@
-import { Info, OpenApiV3 } from "fluid-oas";
+import { Info, OpenApiV3, Server, type OpenApiV3_1 } from "fluid-oas";
 import { addOpenApiRoutes } from "./paths";
 import { addOpenApiComponents } from "./schema";
 const CWD = import.meta.dir;
@@ -14,7 +14,12 @@ async function main() {
   let oas = OpenApiV3.addOpenApiVersion("3.1.1").addInfo(info);
   oas = addOpenApiRoutes(oas);
   oas = addOpenApiComponents(oas);
+  oas = addOpenApiServers(oas);
   oas.writeOASSync(OAS_PATH);
+}
+
+function addOpenApiServers(oas: OpenApiV3_1) {
+  return oas.addServers([Server.addUrl("http://localhost:8081")]);
 }
 
 main();
