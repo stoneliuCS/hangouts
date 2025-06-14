@@ -2,7 +2,7 @@ name: Hangouts.ai
 options:
   bundleIdPrefix: com.hangouts
   deploymentTarget:
-    iOS: "15.0"
+    iOS: "16.0"
 
 packages:
   SwiftOpenAPIGenerator:
@@ -22,6 +22,7 @@ targets:
   Hangouts:
     type: application
     platform: iOS
+    deploymentTarget: "16.0"
     sources:
       - Sources/Hangouts
       - ./Config.plist
@@ -41,6 +42,7 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents: YES
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        IPHONEOS_DEPLOYMENT_TARGET: "16.0"
     # This is crucial - the build plugin
     buildToolPlugins:
       - package: SwiftOpenAPIGenerator

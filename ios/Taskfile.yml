@@ -8,6 +8,8 @@ tasks:
       - rm -rf ./Hangouts.ai.xcodeproj/
       - xcodegen generate
   bind-xcode-build:
+    deps:
+      - generate-xcode-project
     summary: Better LSP support for those working outside of xcode, if working in xcode, this is not needed.
     cmds:
       - xcode-build-server config -project *.xcodeproj -scheme Hangouts
