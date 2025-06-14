@@ -15,4 +15,6 @@
 ## Swift Client
 - xcode v15.0+ (Required for IOS development)
 - [xcodegen](https://github.com/yonaskolb/XcodeGen)
+  - Builds the same xcode project across all repos.
 - [xcode-build-server](https://github.com/SolaWing/xcode-build-server)
+  - Optional, not needed if developing under xcode.
