@@ -21,25 +21,21 @@ struct LandingView: View {
             }
             // Buttons
             VStack(spacing: 30) {
-                Button(action: {
-                }) {
+                NavigationLink(destination: LoginView()) {
                     Text("Log In")
                         .font(.title).bold()
                         .underline()
                         .foregroundColor(Color.black)
                 }
-                Button(action: {
-                }) {
+                NavigationLink(destination: SignUpView()) {
                     Text("Sign Up")
                         .font(.title).bold()
                         .underline()
                         .foregroundColor(Color.black)
                 }
-
             }
             .opacity(opacity)
             .animation(.easeInOut(duration: 2.0).delay(1.0), value: opacity)
         }.padding(.bottom, paddingVertical)
     }
-
 }

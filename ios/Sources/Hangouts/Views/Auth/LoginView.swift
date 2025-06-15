@@ -1,7 +1,7 @@
 import SwiftUI
 
-struct HomeView: View {
+struct LoginView: View {
     var body: some View {
-        
+
     }
 }

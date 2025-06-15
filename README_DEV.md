@@ -20,4 +20,4 @@
   - Optional, not needed if developing under xcode.
 
 ### On development with Swift
-- Sometimes the source kit LSP does not register, it just means you need to buil the project. (Only applies of development outside of xcode.)
+- Sometimes the source kit LSP does not register, it just means you need to build the project. (Only applies of development outside of xcode.)

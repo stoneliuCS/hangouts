@@ -15,16 +15,16 @@ public class AuthService {
     }
 
     // Registers the user into supabase
-    func register(email: String, password: String) async throws -> AuthResponse {
-        return try await self.supabaseClient.auth.signUp(
+    func registerWithEmail(email: String, password: String) async -> AuthResponse? {
+        return try? await self.supabaseClient.auth.signUp(
             email: email,
             password: password
         )
     }
 
     // Logs in with Email
-    func loginWithEmail(email: String, password: String) async throws -> Session {
-        return try await self.supabaseClient.auth.signIn(email: email, password: password)
+    func loginWithEmail(email: String, password: String) async -> Session? {
+        return try? await self.supabaseClient.auth.signIn(email: email, password: password)
     }
 
 }
