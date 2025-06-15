@@ -18,3 +18,6 @@
   - Builds the same xcode project across all repos.
 - [xcode-build-server](https://github.com/SolaWing/xcode-build-server)
   - Optional, not needed if developing under xcode.
+
+### On development with Swift
+- Sometimes the source kit LSP does not register, it just means you need to buil the project. (Only applies of development outside of xcode.)

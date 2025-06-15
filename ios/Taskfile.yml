@@ -2,6 +2,10 @@
 version: "3"
 
 tasks:
+  xcode-clean:
+    summary: Cleans xcode build files
+    cmds:
+      - xcodebuild clean -project *.xcodeproj -scheme Hangouts 
   generate-xcode-project:
     summary: Rebuild xcode project with dependencies.
     cmds:
@@ -12,4 +16,5 @@ tasks:
       - generate-xcode-project
     summary: Better LSP support for those working outside of xcode, if working in xcode, this is not needed.
     cmds:
+      - rm -rf ./buildServer.json
       - xcode-build-server config -project *.xcodeproj -scheme Hangouts

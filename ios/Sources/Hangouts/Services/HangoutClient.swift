@@ -1,15 +1,10 @@
+import Foundation
 import OpenAPIRuntime
 import OpenAPIURLSession
-import Foundation
 
-enum EnvironmentError: Error {
-    case missingURL
-    case missingKey
-}
-
-public struct HangoutsClient {
+public class HangoutsService {
     var client: Client
-    public init(url : URL) {
+    public init(url: URL) {
         self.client = Client(
             serverURL: url,
             transport: URLSessionTransport()
@@ -20,4 +15,3 @@ public struct HangoutsClient {
         return try await self.client.getHealthcheck()
     }
 }
-

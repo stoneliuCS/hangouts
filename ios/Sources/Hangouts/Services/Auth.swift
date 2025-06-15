@@ -1,34 +1,30 @@
-//
-//  Auth.swift
-//  Hangouts
-//
-//  Created by Stone Liu on 6/14/25.
-//
+import Foundation
 import Supabase
 
-enum AuthError : Error {
+enum AuthError: Error {
     case SignUpError
 }
 
 // Handles client authorization with Supabase being the client server.
-class AuthService {
+public class AuthService {
 
     private var supabaseClient: SupabaseClient
 
-    init(supabaseClient: SupabaseClient) {
-        self.supabaseClient = supabaseClient
+    init(supabaseURL: URL, supabaseKey: String) {
+        self.supabaseClient = SupabaseClient(supabaseURL: supabaseURL, supabaseKey: supabaseKey)
     }
 
     // Registers the user into supabase
-    func register(email: String, password: String) async throws -> Session {
-        let res = try await self.supabaseClient.auth.signUp(
+    func register(email: String, password: String) async throws -> AuthResponse {
+        return try await self.supabaseClient.auth.signUp(
             email: email,
             password: password
         )
-        guard res.session != nil else {
-            throw AuthError.SignUpError
-        }
-        return res.session!
     }
-    
+
+    // Logs in with Email
+    func loginWithEmail(email: String, password: String) async throws -> Session {
+        return try await self.supabaseClient.auth.signIn(email: email, password: password)
+    }
+
 }

@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct SignUpView: View {
+struct HomeView: View {
     var body: some View {
     }
 }
