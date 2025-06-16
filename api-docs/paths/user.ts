@@ -16,7 +16,7 @@ export const USER_ROUTE = PathItem.addMethod({
       "application/json": MediaType.addSchema(USER_REQUEST_SCHEMA),
     }),
   ).addResponses(
-    Responses.addResponses({
+    Responses({
       201: Response.addDescription("Successfully created user!").addContents({
         "application/json": MediaType.addSchema(USER_SCHEMA),
       }),

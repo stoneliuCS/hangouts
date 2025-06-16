@@ -11,7 +11,7 @@ import { DEFAULT_ERROR_RESPONSE } from "./utils";
 
 export const HEALTHCHECK_ROUTE = PathItem.addMethod({
   get: Operation.addResponses(
-    Responses.addResponses({
+    Responses({
       "200": Response.addDescription("Server is Healthy!").addContents({
         "application/json": MediaType.addSchema(
           Object.addProperties({

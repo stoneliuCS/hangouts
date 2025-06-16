@@ -4,7 +4,7 @@
     "": {
       "name": "api",
       "dependencies": {
-        "fluid-oas": "^0.4.2",
+        "fluid-oas": "^0.4.3",
       },
       "devDependencies": {
         "@types/bun": "latest",
@@ -21,7 +21,7 @@
 
     "bun-types": ["bun-types@1.2.15", "", { "dependencies": { "@types/node": "*" } }, "sha512-NarRIaS+iOaQU1JPfyKhZm4AsUOrwUOqRNHY0XxI8GI8jYxiLXLcdjYMG9UKS+fwWasc1uw1htV9AX24dD+p4w=="],
 
-    "fluid-oas": ["fluid-oas@0.4.2", "", { "peerDependencies": { "typescript": "^5" } }, "sha512-t1jTkiciWJr43kvIG19bPFOhHbdk2CZiAJiznO4WQxrzcinGrmX1UiQs6CoKkInYL442hSuxyGQv5FeVfsA6+Q=="],
+    "fluid-oas": ["fluid-oas@0.4.3", "", { "peerDependencies": { "typescript": "^5" } }, "sha512-hUZp16urMg4n8826/P/3IzXpW7iNHIyPfwNGBvxeCwE4XbNm6TSnACg7UjMPUSfynlHz6oHZoL0ZOghZvW3slQ=="],
 
     "typescript": ["typescript@5.8.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ=="],
 

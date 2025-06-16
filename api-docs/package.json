@@ -10,9 +10,9 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "fluid-oas": "^0.4.2"
+    "fluid-oas": "^0.4.3"
   },
   "scripts": {
-    "generate" : "bun run index.ts"
+    "generate": "bun run index.ts"
   }
 }

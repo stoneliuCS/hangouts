@@ -4,7 +4,7 @@ import SwiftUI
 @main
 struct HangoutsApp: App {
     // Configurations for current environment
-    private let userState: UserState = UserState(cfg: createEnvConfig())
+    @StateObject private var userState: UserState = UserState(cfg: createEnvConfig())
 
     var body: some Scene {
         WindowGroup {

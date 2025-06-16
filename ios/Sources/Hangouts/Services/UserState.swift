@@ -1,37 +1,30 @@
 import Foundation
 import Supabase
 
-struct UserStore {
-    // Current UUID for the user or none if the user hasn't signed in or registered.
-    var userId: String?
-    // Current email for the user or none if the user hasn't registed or used an email to sign up.
-    var email: String?
-    // A Boolean flag to check if the user has viewed the onboarding screens.
-    var onboarded: Bool
-    // Current session information
-    var session: Session?
-}
-
 struct ErrorRes {
     var message: String
 }
 
 // Root State Management
+@MainActor
 public class UserState: ObservableObject {
 
     private var authService: AuthService
-    private var userStore: UserStore
+    @Published private var userId: String?
+    @Published private var email: String?
+    @Published private var onboarded: Bool
+    @Published private var session: Session?
 
     init(cfg: EnvConfig) {
         self.authService = AuthService(supabaseURL: cfg.SUPABASE_URL, supabaseKey: cfg.SUPABASE_KEY)
-        self.userStore = UserStore(userId: nil, email: nil, onboarded: true, session: nil)
+        self.onboarded = false
     }
 
     func isLoggedIn() -> Bool {
-        guard let userSession = self.userStore.session else {
+        guard let userSession = self.session else {
             return false
         }
-        return userSession.isExpired
+        return !userSession.isExpired
     }
 
     // Registers the user by email, returning an error response if failed to do so.
@@ -42,8 +35,9 @@ public class UserState: ObservableObject {
             return ErrorRes(message: "Failed to register with email and password.")
         }
         // Assign values to the user store.
-        self.userStore.email = email
-        self.userStore.session = res.session
+        self.email = email
+        self.session = res.session
+        objectWillChange.send()
         return nil
     }
 
