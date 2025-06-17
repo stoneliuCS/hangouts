@@ -3,9 +3,9 @@ package server_test
 
 import (
 	"context"
-	"hangouts/cmd/server"
 	"hangouts/internal/database"
 	"hangouts/internal/handler"
+	"hangouts/internal/server"
 	"hangouts/internal/services"
 	"hangouts/internal/transactions"
 	"hangouts/internal/utils"

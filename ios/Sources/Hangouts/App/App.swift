@@ -4,12 +4,12 @@ import SwiftUI
 @main
 struct HangoutsApp: App {
     // Configurations for current environment
-    @StateObject private var userState: UserState = UserState(cfg: createEnvConfig())
+    @State private var userState: UserState = UserState(cfg: createEnvConfig())
 
     var body: some Scene {
         WindowGroup {
             NavigationStack {
-                if !userState.isLoggedIn() {
+                if !userState.isLoggedIn {
                     LandingView()
                 } else {
                     HomeView()

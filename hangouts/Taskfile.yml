@@ -18,7 +18,7 @@ tasks:
       - server
     cmds:
       - go mod download
-      - go build -o main_server ./main.go
+      - go build -o main_server ./cmd/main/main.go
   generate:
     aliases:
       - gen

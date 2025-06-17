@@ -78,6 +78,5 @@ struct SignUpView: View {
             self.errorMessage = res.message
         }
         self.isLoading = false
-        return
     }
 }

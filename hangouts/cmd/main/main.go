@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"hangouts/cmd/server"
+	"hangouts/internal/server"
 	"hangouts/internal/database"
 	"hangouts/internal/handler"
 	"hangouts/internal/services"

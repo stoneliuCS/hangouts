@@ -9,18 +9,18 @@ struct ErrorRes {
 @MainActor
 public class UserState: ObservableObject {
 
+    @Published private var session: Session?
     private var authService: AuthService
     @Published private var userId: String?
     @Published private var email: String?
     @Published private var onboarded: Bool
-    @Published private var session: Session?
 
     init(cfg: EnvConfig) {
         self.authService = AuthService(supabaseURL: cfg.SUPABASE_URL, supabaseKey: cfg.SUPABASE_KEY)
         self.onboarded = false
     }
 
-    func isLoggedIn() -> Bool {
+    public var isLoggedIn: Bool {
         guard let userSession = self.session else {
             return false
         }
@@ -37,7 +37,6 @@ public class UserState: ObservableObject {
         // Assign values to the user store.
         self.email = email
         self.session = res.session
-        objectWillChange.send()
         return nil
     }
 
