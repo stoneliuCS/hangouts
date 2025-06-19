@@ -12,8 +12,6 @@ public class UserState: ObservableObject {
     @Published var isAuthenticated: Bool
     private var session: Session?
     private var authService: AuthService
-    private var userId: String?
-    private var email: String?
     private var onboarded: Bool
     private let localStore: NSObject
 
@@ -27,14 +25,26 @@ public class UserState: ObservableObject {
     // Registers the user by email, returning an error response if failed to do so.
     func registerByEmail(email: String, password: String) async -> ErrorRes? {
         let res = await self.authService.registerWithEmail(email: email, password: password)
-
-        guard let res = res else {
-            return ErrorRes(message: "Failed to register with email and password.")
+        switch res {
+        case .Response(let response):
+            self.session = response.session
+            self.isAuthenticated = true
+            return nil
+        case .Error(let error):
+            return ErrorRes(message: error)
         }
-        self.email = email
-        self.session = res.session
-        self.isAuthenticated = true
-        return nil
+    }
+
+    func signupByEmail(email: String, password: String) async -> ErrorRes? {
+        let res = await self.authService.loginWithEmail(email: email, password: password)
+        switch res {
+        case .Response(let response):
+            self.session = response
+            self.isAuthenticated = true
+            return nil
+        case .Error(let error):
+            return ErrorRes(message: error)
+        }
     }
 
 }
