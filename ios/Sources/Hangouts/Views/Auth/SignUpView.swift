@@ -1,9 +1,6 @@
 import FormValidator
 import SwiftUI
 
-// Navbar feature
-//
-
 class SignupForm: ObservableObject {
     private static let passwordRegex = try! NSRegularExpression(
         pattern: "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$", options: [])
@@ -40,9 +37,9 @@ class SignupForm: ObservableObject {
 struct SignUpView: View {
     @ObservedObject private var signupForm = SignupForm()
     @EnvironmentObject private var userState: UserState
-    @State private var navigationPath = NavigationPath()
     @State private var isLoading = false
     @State private var errorMessage: String?
+    @Environment(\.dismiss) private var dismiss
     var body: some View {
         VStack(spacing: 15) {
             InputField(placeholder: "Username", text: $signupForm.username, inputType: .text)
@@ -78,5 +75,6 @@ struct SignUpView: View {
             self.errorMessage = res.message
         }
         self.isLoading = false
+        self.dismiss()
     }
 }

@@ -9,22 +9,19 @@ struct ErrorRes {
 @MainActor
 public class UserState: ObservableObject {
 
-    @Published private var session: Session?
+    @Published var isAuthenticated: Bool
+    private var session: Session?
     private var authService: AuthService
-    @Published private var userId: String?
-    @Published private var email: String?
-    @Published private var onboarded: Bool
+    private var userId: String?
+    private var email: String?
+    private var onboarded: Bool
+    private let localStore: NSObject
 
     init(cfg: EnvConfig) {
         self.authService = AuthService(supabaseURL: cfg.SUPABASE_URL, supabaseKey: cfg.SUPABASE_KEY)
         self.onboarded = false
-    }
-
-    public var isLoggedIn: Bool {
-        guard let userSession = self.session else {
-            return false
-        }
-        return !userSession.isExpired
+        self.localStore = UserDefaults.standard
+        self.isAuthenticated = false
     }
 
     // Registers the user by email, returning an error response if failed to do so.
@@ -34,9 +31,9 @@ public class UserState: ObservableObject {
         guard let res = res else {
             return ErrorRes(message: "Failed to register with email and password.")
         }
-        // Assign values to the user store.
         self.email = email
         self.session = res.session
+        self.isAuthenticated = true
         return nil
     }
 
