@@ -73,6 +73,8 @@ struct SignUpView: View {
             email: self.signupForm.email, password: self.signupForm.password)
         if let res = res {
             self.errorMessage = res.message
+            self.isLoading = false
+            self.dismiss()
         }
         self.isLoading = false
         self.dismiss()

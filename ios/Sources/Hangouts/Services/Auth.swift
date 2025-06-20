@@ -45,4 +45,11 @@ public class AuthService {
         return await AuthWrapper(fn: fn)
     }
 
+    func logout() async -> AuthEnum<Void> {
+        let fn = {
+            try await self.supabaseClient.auth.signOut();
+        }
+        return await AuthWrapper(fn : fn)
+    }
+
 }

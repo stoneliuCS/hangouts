@@ -22,13 +22,17 @@ public class UserState: ObservableObject {
         self.isAuthenticated = false
     }
 
+    private func setAuth(session: Session?) {
+        self.session = session
+        self.isAuthenticated = true
+    }
+
     // Registers the user by email, returning an error response if failed to do so.
     func registerByEmail(email: String, password: String) async -> ErrorRes? {
         let res = await self.authService.registerWithEmail(email: email, password: password)
         switch res {
         case .Response(let response):
-            self.session = response.session
-            self.isAuthenticated = true
+            self.setAuth(session: response.session)
             return nil
         case .Error(let error):
             return ErrorRes(message: error)
@@ -39,11 +43,21 @@ public class UserState: ObservableObject {
         let res = await self.authService.loginWithEmail(email: email, password: password)
         switch res {
         case .Response(let response):
-            self.session = response
-            self.isAuthenticated = true
+            self.setAuth(session: response)
             return nil
         case .Error(let error):
             return ErrorRes(message: error)
+        }
+    }
+
+    func logout() async -> ErrorRes? {
+        let res = await self.authService.logout()
+        switch res {
+            case .Response():
+                self.isAuthenticated = false
+                return nil
+            case .Error(let error):
+                return ErrorRes(message : error)
         }
     }
 

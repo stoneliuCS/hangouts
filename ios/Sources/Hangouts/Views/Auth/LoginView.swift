@@ -47,6 +47,7 @@ struct LoginView: View {
         let res = await self.userState.signupByEmail(
             email: self.signupForm.email, password: self.signupForm.password)
         if let res = res {
+            self.isLoading = false
             self.errorMessage = res.message
             return
         }
