@@ -20,5 +20,5 @@ export const HEALTHCHECK_ROUTE = PathItem.addMethod({
         ),
       }),
     }).addDefault(DEFAULT_ERROR_RESPONSE),
-  ),
+  ).addSecurity([]) // By pass security for healthcheck,
 });

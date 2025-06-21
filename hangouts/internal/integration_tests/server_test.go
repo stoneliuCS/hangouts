@@ -21,18 +21,19 @@ import (
 )
 
 var (
-	PORT   = "8008"
-	CLIENT = utils.CreateTestClient(PORT)
+	PORT   = 8008
 	LOGGER = slog.New(slog.Default().Handler())
+	CLIENT = utils.CreateTestClient(PORT, LOGGER)
 )
 
-func runServer(port string) {
+func runServer() {
 	ctx := context.Background()
 
 	dbName := "users"
 	dbUser := "user"
 	dbPassword := "password"
 	dbPort := "5432"
+	jwtKey := "supersecretkey"
 	LOGGER.Info("Creating postgres container")
 	postgresContainer, err := postgres.Run(ctx,
 		"postgres:16-alpine",
@@ -57,11 +58,13 @@ func runServer(port string) {
 	dbPort = utils.SafeCall(dbHostPortFn).Port()
 
 	envConfig := &utils.EnvConfig{
-		DB_HOST:     dbHost,
-		DB_PORT:     dbPort,
-		DB_USER:     dbUser,
-		DB_PASSWORD: dbPassword,
-		DB_NAME:     dbName,
+		DB_HOST:        dbHost,
+		DB_PORT:        dbPort,
+		DB_USER:        dbUser,
+		DB_PASSWORD:    dbPassword,
+		DB_NAME:        dbName,
+		PORT:           PORT,
+		JWT_SECRET_KEY: jwtKey,
 	}
 	db := database.CreateDatabase(*envConfig, LOGGER)
 
@@ -72,12 +75,12 @@ func runServer(port string) {
 	services := services.CreateServices(LOGGER, transactions)
 
 	h := handler.NewHandler(LOGGER, services)
-	server.RunServer(h, ":"+port)
+	server.RunServer(h, *envConfig, LOGGER)
 }
 
 func TestMain(m *testing.M) {
 	LOGGER.Info("Starting test server in a seperate go routine..")
-	go runServer(PORT)
+	go runServer()
 	if !CLIENT.CheckServer(time.Second * 30) {
 		os.Exit(1)
 	}

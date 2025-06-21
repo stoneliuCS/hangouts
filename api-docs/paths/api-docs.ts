@@ -15,5 +15,5 @@ export const API_DOCS = PathItem.addMethod({
         "text/html": MediaType.addSchema(String),
       }),
     }).addDefault(DEFAULT_ERROR_RESPONSE),
-  ),
+  ).addSecurity([]),
 });

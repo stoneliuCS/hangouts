@@ -1,16 +1,13 @@
 package main
 
 import (
-	"context"
-	"hangouts/internal/server"
 	"hangouts/internal/database"
 	"hangouts/internal/handler"
+	"hangouts/internal/server"
 	"hangouts/internal/services"
 	"hangouts/internal/transactions"
 	"hangouts/internal/utils"
 	"log/slog"
-
-	"github.com/sethvargo/go-envconfig"
 )
 
 func main() {
@@ -18,7 +15,7 @@ func main() {
 	logger := slog.New(slog.Default().Handler())
 
 	logger.Info("Loading environment variables...")
-	env := loadEnv()
+	env := utils.LoadEnv()
 
 	logger.Info("Creating database from environment variables...")
 	db := database.CreateDatabase(env, logger)
@@ -33,17 +30,8 @@ func main() {
 	services := services.CreateServices(logger, transactions)
 
 	logger.Info("Intializing handler layer...")
-
 	h := handler.NewHandler(logger, services)
 
 	logger.Info("Attaching handler and running server...")
-	server.RunServer(h, ":8081")
-}
-
-// Loads the environment variables as an EnvConfig
-func loadEnv() utils.EnvConfig {
-	var config utils.EnvConfig
-	envFun := func() error { return envconfig.Process(context.Background(), &config) }
-	utils.SafeCallErrorSupplier(envFun)
-	return config
+	server.RunServer(h, env, logger)
 }
