@@ -34,7 +34,7 @@ type APIV1UserPostCreated struct {
 	FirstName string `json:"firstName"`
 	LastName  string `json:"lastName"`
 	Username  string `json:"username"`
-	Age       int    `json:"age"`
+	Email     string `json:"email"`
 	// Unique identifier.
 	ID string `json:"id"`
 }
@@ -54,9 +54,9 @@ func (s *APIV1UserPostCreated) GetUsername() string {
 	return s.Username
 }
 
-// GetAge returns the value of Age.
-func (s *APIV1UserPostCreated) GetAge() int {
-	return s.Age
+// GetEmail returns the value of Email.
+func (s *APIV1UserPostCreated) GetEmail() string {
+	return s.Email
 }
 
 // GetID returns the value of ID.
@@ -79,9 +79,9 @@ func (s *APIV1UserPostCreated) SetUsername(val string) {
 	s.Username = val
 }
 
-// SetAge sets the value of Age.
-func (s *APIV1UserPostCreated) SetAge(val int) {
-	s.Age = val
+// SetEmail sets the value of Email.
+func (s *APIV1UserPostCreated) SetEmail(val string) {
+	s.Email = val
 }
 
 // SetID sets the value of ID.
@@ -96,7 +96,7 @@ type APIV1UserPostReq struct {
 	FirstName string `json:"firstName"`
 	LastName  string `json:"lastName"`
 	Username  string `json:"username"`
-	Age       int    `json:"age"`
+	Email     string `json:"email"`
 }
 
 // GetFirstName returns the value of FirstName.
@@ -114,9 +114,9 @@ func (s *APIV1UserPostReq) GetUsername() string {
 	return s.Username
 }
 
-// GetAge returns the value of Age.
-func (s *APIV1UserPostReq) GetAge() int {
-	return s.Age
+// GetEmail returns the value of Email.
+func (s *APIV1UserPostReq) GetEmail() string {
+	return s.Email
 }
 
 // SetFirstName sets the value of FirstName.
@@ -134,9 +134,34 @@ func (s *APIV1UserPostReq) SetUsername(val string) {
 	s.Username = val
 }
 
-// SetAge sets the value of Age.
-func (s *APIV1UserPostReq) SetAge(val int) {
-	s.Age = val
+// SetEmail sets the value of Email.
+func (s *APIV1UserPostReq) SetEmail(val string) {
+	s.Email = val
+}
+
+type BearerAuth struct {
+	Token string
+	Roles []string
+}
+
+// GetToken returns the value of Token.
+func (s *BearerAuth) GetToken() string {
+	return s.Token
+}
+
+// GetRoles returns the value of Roles.
+func (s *BearerAuth) GetRoles() []string {
+	return s.Roles
+}
+
+// SetToken sets the value of Token.
+func (s *BearerAuth) SetToken(val string) {
+	s.Token = val
+}
+
+// SetRoles sets the value of Roles.
+func (s *BearerAuth) SetRoles(val []string) {
+	s.Roles = val
 }
 
 // Error Schema.

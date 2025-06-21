@@ -30,4 +30,5 @@ tasks:
     cmds:
       - bun run api-docs/index.ts
       - task hangouts:generate
-      - task ios:generate-xcode-project
+      - task ios:bind-xcode-build
+      - task ios:xcode-clean

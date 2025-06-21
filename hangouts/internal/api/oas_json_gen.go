@@ -130,8 +130,8 @@ func (s *APIV1UserPostCreated) encodeFields(e *jx.Encoder) {
 		e.Str(s.Username)
 	}
 	{
-		e.FieldStart("age")
-		e.Int(s.Age)
+		e.FieldStart("email")
+		e.Str(s.Email)
 	}
 	{
 		e.FieldStart("id")
@@ -143,7 +143,7 @@ var jsonFieldsNameOfAPIV1UserPostCreated = [5]string{
 	0: "firstName",
 	1: "lastName",
 	2: "username",
-	3: "age",
+	3: "email",
 	4: "id",
 }
 
@@ -192,17 +192,17 @@ func (s *APIV1UserPostCreated) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"username\"")
 			}
-		case "age":
+		case "email":
 			requiredBitSet[0] |= 1 << 3
 			if err := func() error {
-				v, err := d.Int()
-				s.Age = int(v)
+				v, err := d.Str()
+				s.Email = string(v)
 				if err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"age\"")
+				return errors.Wrap(err, "decode field \"email\"")
 			}
 		case "id":
 			requiredBitSet[0] |= 1 << 4
@@ -294,8 +294,8 @@ func (s *APIV1UserPostReq) encodeFields(e *jx.Encoder) {
 		e.Str(s.Username)
 	}
 	{
-		e.FieldStart("age")
-		e.Int(s.Age)
+		e.FieldStart("email")
+		e.Str(s.Email)
 	}
 }
 
@@ -303,7 +303,7 @@ var jsonFieldsNameOfAPIV1UserPostReq = [4]string{
 	0: "firstName",
 	1: "lastName",
 	2: "username",
-	3: "age",
+	3: "email",
 }
 
 // Decode decodes APIV1UserPostReq from json.
@@ -351,17 +351,17 @@ func (s *APIV1UserPostReq) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"username\"")
 			}
-		case "age":
+		case "email":
 			requiredBitSet[0] |= 1 << 3
 			if err := func() error {
-				v, err := d.Int()
-				s.Age = int(v)
+				v, err := d.Str()
+				s.Email = string(v)
 				if err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"age\"")
+				return errors.Wrap(err, "decode field \"email\"")
 			}
 		default:
 			return d.Skip()

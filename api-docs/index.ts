@@ -1,4 +1,10 @@
-import { Info, OpenApiV3, Server, type OpenApiV3_1 } from "fluid-oas";
+import {
+  Info,
+  OpenApiV3,
+  SecurityRequirement,
+  Server,
+  type OpenApiV3_1,
+} from "fluid-oas";
 import { addOpenApiRoutes } from "./paths";
 import { addOpenApiComponents } from "./schema";
 const CWD = import.meta.dir;
@@ -15,6 +21,9 @@ async function main() {
   oas = addOpenApiRoutes(oas);
   oas = addOpenApiComponents(oas);
   oas = addOpenApiServers(oas);
+  oas = oas.addSecurity([
+    SecurityRequirement.addSecurityRequirement({ bearerAuth: [] }),
+  ]);
   oas.writeOASSync(OAS_PATH);
 }
 

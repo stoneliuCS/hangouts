@@ -10,19 +10,25 @@ struct ErrorRes {
 public class UserState: ObservableObject {
 
     @Published private var session: Session?
-    private var authService: AuthService
-    private var onboarded: Bool
+    private let authService: AuthService
+    private let hangoutsService: HangoutsService
     private let localStore: NSObject
 
     public var isAuthenticated: Bool {
         session != nil && !session!.isExpired
     }
+    @Published public var onboarded: Bool
 
     init(cfg: EnvConfig) {
         self.session = nil
         self.authService = AuthService(supabaseURL: cfg.SUPABASE_URL, supabaseKey: cfg.SUPABASE_KEY)
+        self.hangoutsService = HangoutsService(url: cfg.API_BASE_URL)
         self.onboarded = false
         self.localStore = UserDefaults.standard
+    }
+
+    func registerUser(username: String, firstName: String, lastName: String, email: String) {
+
     }
 
     // Registers the user by email, returning an error response if failed to do so.
@@ -41,7 +47,7 @@ public class UserState: ObservableObject {
         let res = await self.authService.loginWithEmail(email: email, password: password)
         switch res {
         case .Response(let response):
-            self.session = response 
+            self.session = response
             return nil
         case .Error(let error):
             return ErrorRes(message: error)
