@@ -27,7 +27,7 @@ func NewHandler(logger *slog.Logger, services *services.Services) api.Handler {
 }
 
 func (h Handler) NewError(ctx context.Context, err error) *api.ErrRespStatusCode {
-	return &api.ErrRespStatusCode{StatusCode: 500, Response: api.ErrResp{Error: "Internal Server Error."}}
+	return &api.ErrRespStatusCode{StatusCode: 401, Response: api.ErrResp{Error: "Unauthorized."}}
 }
 
 // Define a method on the Healthcheckservice method that pings the server.

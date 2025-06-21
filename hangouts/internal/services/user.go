@@ -4,8 +4,6 @@ import (
 	"hangouts/internal/database/models"
 	"hangouts/internal/transactions"
 	"log/slog"
-
-	"github.com/google/uuid"
 )
 
 type UserService interface {
@@ -19,7 +17,6 @@ type UserServiceImpl struct {
 
 // CreateUser implements UserService.
 func (u UserServiceImpl) CreateUser(req *models.User) (*models.User, error) {
-	req.ID = uuid.New()
 	return u.userTransaction.CreateUser(req)
 }
 

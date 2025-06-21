@@ -5,6 +5,8 @@ import (
 	api "hangouts/internal/api"
 	"hangouts/internal/database/models"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 func (h Handler) APIV1UserPost(ctx context.Context, req api.OptAPIV1UserPostReq) (api.APIV1UserPostRes, error) {
@@ -15,6 +17,7 @@ func (h Handler) APIV1UserPost(ctx context.Context, req api.OptAPIV1UserPostReq)
 	user.FirstName = req.Value.GetFirstName()
 	user.LastName = req.Value.GetLastName()
 	user.Email = req.Value.GetEmail()
+	user.ID = uuid.New()
 	res, err := h.services.UserService.CreateUser(user)
 	if err != nil {
 		return &api.APIV1UserPostBadRequest{}, err

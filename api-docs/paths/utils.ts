@@ -2,7 +2,7 @@ import { MediaType, Response, String } from "fluid-oas";
 import { ERROR_SCHEMA } from "../schema/error";
 
 export const DEFAULT_ERROR_RESPONSE = Response.addDescription(
-  "Server request failed.",
+  "Unauthorized.",
 ).addContents({
   "application/json": MediaType.addSchema(ERROR_SCHEMA),
 });
