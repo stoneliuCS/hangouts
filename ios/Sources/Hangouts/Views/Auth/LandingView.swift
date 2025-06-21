@@ -5,37 +5,35 @@ struct LandingView: View {
     @State private var opacity = 0.0
     @State private var paddingVertical = 100.0
     @State private var easeInDuration = 2.0
+    @State private var path = NavigationPath()
 
     var body: some View {
-        VStack(spacing: 150) {
+        NavigationStack(path: $path) {
             VStack {
-                Text("Hangouts.ai").font(.system(size: 60)).italic().bold().opacity(
-                    opacity
-                )
-                .animation(.easeInOut(duration: 2.0), value: opacity).onAppear { opacity = 1.0 }
-                Text("Plan less, do more.")
-                    .font(.system(size: 24))
-                    .foregroundColor(.secondary)
-                    .opacity(opacity)
-                    .animation(.easeInOut(duration: 2.0).delay(0.5), value: opacity)
-            }
-            // Buttons
-            VStack(spacing: 30) {
-                NavigationLink(destination: LoginView()) {
-                    Text("Log In")
-                        .font(.title).bold()
-                        .underline()
-                        .foregroundColor(Color.black)
-                }
-                NavigationLink(destination: SignUpView()) {
-                    Text("Sign Up")
-                        .font(.title).bold()
-                        .underline()
-                        .foregroundColor(Color.black)
+                Image("logo").resizable()
+                VStack(spacing: 30) {
+                    Button("Log In") {
+                        path.append("Login")
+                    }.font(.title2)
+                    Button("Sign Up") {
+                        path.append("SignUp")
+                    }.font(.title2)
                 }
             }
             .opacity(opacity)
             .animation(.easeInOut(duration: 2.0).delay(1.0), value: opacity)
-        }.padding(.bottom, paddingVertical)
+            .navigationTitle("Hangouts.ai")
+            .onAppear {
+                opacity = 1.0
+            }
+            .navigationDestination(for: String.self) { value in
+                if value == "Login" {
+                    LoginView()
+                } else if value == "SignUp" {
+                    SignUpView()
+                }
+            }.padding(.bottom, paddingVertical)
+
+        }
     }
 }

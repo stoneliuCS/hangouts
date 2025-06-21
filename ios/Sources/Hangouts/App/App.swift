@@ -8,7 +8,7 @@ struct HangoutsApp: App {
 
     var body: some Scene {
         WindowGroup {
-            NavigationStack {
+            Group {
                 if !userState.isAuthenticated {
                     LandingView()
                 } else {

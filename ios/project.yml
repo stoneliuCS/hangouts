@@ -34,8 +34,11 @@ targets:
     type: application
     platform: iOS
     deploymentTarget: "16.0"
+    resources:
+      - path: ./Resources/assets.xcassets
     sources:
       - Sources/Hangouts
+      - Sources/Resources
     info:
       path: ./Sources/Hangouts/Info.plist
       properties:
