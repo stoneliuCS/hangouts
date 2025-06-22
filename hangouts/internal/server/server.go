@@ -20,7 +20,7 @@ func RunServer(handler api.Handler, cfg utils.EnvConfig, logger *slog.Logger) {
 	srv := utils.SafeCall(srvFunc)
 	addr := fmt.Sprintf(":%d", cfg.PORT)
 	servFunc := func() error {
-		logger.Info("Started server on localhost" + addr)
+		logger.Info("Started server on http://localhost" + addr)
 		return http.ListenAndServe(addr, srv)
 	}
 

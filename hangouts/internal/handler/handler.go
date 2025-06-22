@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"hangouts"
 	api "hangouts/internal/api"
 	"hangouts/internal/services"
 	"log/slog"
@@ -10,12 +11,10 @@ import (
 	scalar "github.com/MarceloPetrucio/go-scalar-api-reference"
 )
 
-var openapiSpec string = "../openapi.json"
-
 // Handles incoming API requests
 type Handler struct {
 	services *services.Services
-	logger      *slog.Logger // event logger
+	logger   *slog.Logger // event logger
 }
 
 // Creates a new handler for all defined API endpoints
@@ -37,7 +36,7 @@ func (h Handler) HealthcheckGet(ctx context.Context) (*api.HealthcheckGetOK, err
 
 func (h Handler) Get(ctx context.Context) (api.GetOK, error) {
 	html, err := scalar.ApiReferenceHTML(&scalar.Options{
-		SpecURL: openapiSpec,
+		SpecURL: hangouts.GetSpecPath(),
 	})
 	if err != nil {
 		return api.GetOK{}, err

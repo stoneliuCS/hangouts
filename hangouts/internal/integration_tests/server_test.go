@@ -94,7 +94,12 @@ func TestHealthCheck(t *testing.T) {
 	expectedBody := map[string]interface{}{
 		"message": "OK",
 	}
-
 	testVerify := CLIENT.GET("/healthcheck")
 	testVerify.AssertStatusCode(200, t).AssertBody(expectedBody, t)
+}
+
+func TestRootApiDocs(t *testing.T) {
+	testVerify := CLIENT.GET("/")
+	// No route protections.
+	testVerify.AssertStatusCode(200, t)
 }
