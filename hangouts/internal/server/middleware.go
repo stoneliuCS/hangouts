@@ -16,7 +16,7 @@ func logging(logger *slog.Logger) middleware.Middleware {
 		operationID := req.OperationID
 
 		// Log the incoming request
-		logger.Info("incoming request",
+		logger.Info("Incoming Request:",
 			slog.String("operation", operationName),
 			slog.String("operation_id", operationID),
 			slog.Time("start_time", start),
@@ -38,19 +38,10 @@ func logging(logger *slog.Logger) middleware.Middleware {
 				slog.Any("error", err),
 			)
 		} else {
-			// Log successful response
-			var statusCode int
-			if resp.Type != nil {
-				// Try to extract status code if available
-				// This depends on your response structure
-				statusCode = 200 // Default success code
-			}
-
 			logger.Info("request completed",
 				slog.String("operation", operationName),
 				slog.String("operation_id", operationID),
 				slog.Duration("duration", duration),
-				slog.Int("status_code", statusCode),
 			)
 		}
 

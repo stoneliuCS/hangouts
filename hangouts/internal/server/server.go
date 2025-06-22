@@ -11,7 +11,7 @@ import (
 // Runs the server api with the given handler.
 func RunServer(handler api.Handler, cfg utils.EnvConfig, logger *slog.Logger) {
 	// Configure security handler for bearer authentication
-	securityHandler := createSecurityHandler(cfg.JWT_SECRET_KEY)
+	securityHandler := createSecurityHandler(cfg.JWT_SECRET_KEY, logger)
 	// Create middleware for logging.
 	opts := api.WithMiddleware(logging(logger))
 

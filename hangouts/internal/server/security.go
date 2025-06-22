@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	api "hangouts/internal/api"
+	"log/slog"
 	"strings"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -11,6 +12,7 @@ import (
 
 type SecurityHandler struct {
 	secretKey string
+	logger    *slog.Logger
 }
 
 // HandleBearerAuth implements api.SecurityHandler.
@@ -31,6 +33,6 @@ func (s SecurityHandler) HandleBearerAuth(ctx context.Context, operationName api
 	return ctx, nil
 }
 
-func createSecurityHandler(key string) api.SecurityHandler {
-	return SecurityHandler{secretKey: key}
+func createSecurityHandler(key string, logger *slog.Logger) api.SecurityHandler {
+	return SecurityHandler{secretKey: key, logger: logger}
 }
