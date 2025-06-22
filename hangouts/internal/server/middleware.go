@@ -17,9 +17,10 @@ func logging(logger *slog.Logger) middleware.Middleware {
 
 		// Log the incoming request
 		logger.Info("Incoming Request:",
-			slog.String("operation", operationName),
-			slog.String("operation_id", operationID),
-			slog.Time("start_time", start),
+			slog.String("Operation", operationName),
+			slog.String("Operation_ID", operationID),
+			slog.Any("RequestBody", req.Body),
+			slog.Time("Starting Time", start),
 		)
 
 		// Call the next handler

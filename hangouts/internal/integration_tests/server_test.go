@@ -23,7 +23,7 @@ import (
 var (
 	PORT   = 8008
 	LOGGER = slog.New(slog.Default().Handler())
-	CLIENT = utils.CreateTestClient(PORT, LOGGER)
+	CLIENT = func() utils.TestClient { return utils.CreateTestClient(PORT, LOGGER) }
 )
 
 func runServer() {
@@ -81,7 +81,7 @@ func runServer() {
 func TestMain(m *testing.M) {
 	LOGGER.Info("Starting test server in a seperate go routine..")
 	go runServer()
-	if !CLIENT.CheckServer(time.Second * 30) {
+	if !CLIENT().CheckServer(time.Second * 30) {
 		os.Exit(1)
 	}
 	LOGGER.Info("Finished setting up mock postgres container and server...")
@@ -94,12 +94,39 @@ func TestHealthCheck(t *testing.T) {
 	expectedBody := map[string]interface{}{
 		"message": "OK",
 	}
-	testVerify := CLIENT.GET("/healthcheck")
+	testVerify := CLIENT().GET("/healthcheck")
 	testVerify.AssertStatusCode(200, t).AssertBody(expectedBody, t)
 }
 
 func TestRootApiDocs(t *testing.T) {
-	testVerify := CLIENT.GET("/")
+	testVerify := CLIENT().GET("/")
 	// No route protections.
 	testVerify.AssertStatusCode(200, t)
+}
+
+// api/v1/user integration tests.
+func TestCreatingAUserUnAuthorized(t *testing.T) {
+	client := CLIENT().AddBody(map[string]any{
+		"firstName": "John",
+		"lastName":  "Smith",
+		"username":  "JohnSlayer69",
+		"email":     "JohnSlayer69@blah.com",
+	})
+	// Client does not have an authorization header.
+	client.POST("/api/v1/user").AssertStatusCode(401, t)
+}
+
+func TestCreatingAUserAuthorized(t *testing.T) {
+	client := CLIENT()
+	client.AddBody(map[string]any{
+		"firstName": "John",
+		"lastName":  "Smith",
+		"username":  "JohnSlayer69",
+		"email":     "JohnSlayer69@blah.com",
+	})
+	client.AddHeaders(map[string]string{
+		"Authorization" : "Bearer mysupersecretkey",
+	})
+	// TODO: Check out failing test
+	client.POST("/api/v1/user").AssertStatusCode(201, t)
 }
